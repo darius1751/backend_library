@@ -12,7 +12,7 @@ export class AuthService {
         return this.jwtService.sign({ id }, { secret: env.SECRET });
     }
 
-    validateToken(token: string) {
+    validateToken(token: string):Boolean {
         return this.jwtService.verify<Boolean>(token, { secret: env.SECRET });
     }
 }

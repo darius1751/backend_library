@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCredentialDto } from './dto/create-credential.dto';
@@ -24,7 +24,7 @@ export class CredentialService {
       throw new BadRequestException(`FindOneById don't exist id in DB`);
     }
   }
-
+  
   async create(createCredentialDto: CreateCredentialDto): Promise<string> {
     try {
       const credential = await this.credentialRepository.create({
@@ -37,7 +37,7 @@ export class CredentialService {
       throw new BadRequestException(`Error in create user: ${exception.message}`);
     }
   }
-
+  
   async login(loginCredentialDto: loginCredentialDto) {
     try {
       const { user, password } = loginCredentialDto;
