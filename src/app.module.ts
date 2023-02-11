@@ -9,6 +9,10 @@ import { Credential } from './credential/entities/credential.entity';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TestingModule } from '@nestjs/testing';
+import { RoleModule } from './role/role.module';
+import { Role } from './role/entities/role.entity';
+import { PermissionModule } from './permission/permission.module';
+import { Permission } from './permission/entities/permission.entity';
 
 @Module({
   imports: [
@@ -29,9 +33,11 @@ import { TestingModule } from '@nestjs/testing';
       port: parseInt(env.DATABASE_PORT),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Credential]
+      entities: [Credential, Role, Permission]
     }),
-    AuthModule
+    AuthModule,
+    RoleModule,
+    PermissionModule
   ],
   controllers: [AppController],
   providers: [AppService],
