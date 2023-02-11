@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
+import { Credential } from './entities/credential.entity';
+import {compareSync, hashSync} from 'bcrypt';
+import { loginCredentialDto } from './dto/login-credential.dto';
 
 @Injectable()
 export class CredentialService {
-  create(createCredentialDto: CreateCredentialDto) {
-    return 'This action adds a new credential';
+  
+  constructor(@InjectRepository(Credential) private credentialRepository:Repository<Credential>){}
+  
+  async findOneById(id:string){
+    try{
+      return await this.credentialRepository.findOneBy({id});
+    }catch(exception){
+      throw new BadRequestException(`FindOneById don't exist id in DB`);
+    }
   }
 
-  findAll() {
-    return `This action returns all credential`;
+  async create(createCredentialDto: CreateCredentialDto):Promise<string> {
+    try{
+      const credential = await this.credentialRepository.create({
+        ...createCredentialDto,
+        password: hashSync(createCredentialDto.password,10)
+      });
+      return await credential.id;
+      
+    }catch(exception){
+      throw new BadRequestException(`Error in create user: ${exception.message}`);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} credential`;
+  async login(loginCredentialDto:loginCredentialDto):Promise<string> {
+    try{
+      const {user, password} = loginCredentialDto;
+      const userDB = await this.credentialRepository.findOneBy({user});
+      if(compareSync(password, userDB.password))
+        return await userDB.id;
+    }catch(exception){
+      throw new BadRequestException(`Error in create user: ${exception.message}`);
+    }    
   }
 
-  update(id: number, updateCredentialDto: UpdateCredentialDto) {
-    return `This action updates a #${id} credential`;
+  async update(id: string, updateCredentialDto: UpdateCredentialDto) {
+    try{
+      await this.findOneById(id);
+      return await this.credentialRepository.update({id},updateCredentialDto);
+      
+    }catch(exception){
+      throw new BadRequestException(`Don't exist credential with id: ${id}`);
+    }
+      
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} credential`;
-  }
+  
 }
