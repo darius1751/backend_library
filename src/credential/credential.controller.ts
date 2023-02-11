@@ -5,11 +5,11 @@ import { loginCredentialDto } from './dto/login-credential.dto';
 @Controller('credential')
 export class CredentialController {
 
-  constructor(private readonly credentialService: CredentialService) {}
-  
+  constructor(private readonly credentialService: CredentialService) { }
+
   @Post()
-  login(@Body() loginCredentialDto:loginCredentialDto) {
+  login(@Body() loginCredentialDto: loginCredentialDto) {
     return this.credentialService.login(loginCredentialDto);
   }
-  
+
 }

@@ -777,9 +777,9 @@
     jsonc-parser "3.2.0"
     pluralize "8.0.0"
 
-"@nestjs/testing@^9.0.0":
+"@nestjs/testing@^9.3.8":
   version "9.3.8"
-  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-9.3.8.tgz"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.3.8.tgz#4f2d96dd5b6fadcd64075d68c870294d324b58eb"
   integrity sha512-QyGOfrEOWbT8mi7ruYnh/taKuHDv4caAyf4WZ1YKkGn4tCeTKKNXSvV/y+NoO5o9Li/sLiq9B8EmleB1fxGajw==
   dependencies:
     tslib "2.5.0"
@@ -2169,14 +2169,9 @@ dotenv-expand@10.0.0:
   resolved "https://registry.npmjs.org/dotenv-expand/-/dotenv-expand-10.0.0.tgz"
   integrity sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==
 
-dotenv@16.0.3:
+dotenv@16.0.3, dotenv@^16.0.3:
   version "16.0.3"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.0.3.tgz"
-  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
-
-dotenv@^16.0.3:
-  version "16.0.3"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
 ecdsa-sig-formatter@1.0.11:
