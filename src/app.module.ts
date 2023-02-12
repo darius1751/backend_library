@@ -20,6 +20,8 @@ import { PersonState } from './person-state/entities/person-state.entity';
 import { LoanStateModule } from './loan-state/loan-state.module';
 import { AuthorModule } from './author/author.module';
 import { Author } from './author/entities/author.entity';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/entities/category.entity';
 
 @Module({
   imports: [
@@ -40,14 +42,15 @@ import { Author } from './author/entities/author.entity';
       port: parseInt(env.DATABASE_PORT),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Credential, Role, Permission, PersonState, Author]
+      entities: [Credential, Role, Permission, PersonState, Author, Category]
     }),
     AuthModule,
     RoleModule,
     PermissionModule,
     PersonStateModule,
     LoanStateModule,
-    AuthorModule
+    AuthorModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
