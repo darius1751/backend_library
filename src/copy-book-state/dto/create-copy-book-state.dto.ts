@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-export class CreateDevolutionStateDto {
+export class CreateCopyBookStateDto {
     
     @IsString()
     public readonly name:string;

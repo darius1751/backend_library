@@ -1,8 +1,7 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
-export class Category {
-    
+export class CopyBookState {
     @PrimaryColumn({
         generated:'uuid'
     })
