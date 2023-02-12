@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { env } from 'process';
@@ -13,6 +13,8 @@ import { RoleModule } from './role/role.module';
 import { Role } from './role/entities/role.entity';
 import { PermissionModule } from './permission/permission.module';
 import { Permission } from './permission/entities/permission.entity';
+import { JwtMiddleware } from './jwt/jwt.middleware';
+import { PermissionController } from './permission/permission.controller';
 
 @Module({
   imports: [
@@ -42,4 +44,10 @@ import { Permission } from './permission/entities/permission.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule implements NestModule{ 
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+    .apply(JwtMiddleware)
+    .forRoutes(AppController,PermissionController)
+  }
+}
