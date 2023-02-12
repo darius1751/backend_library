@@ -17,6 +17,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { PermissionController } from './permission/permission.controller';
 import { PersonStateModule } from './person-state/person-state.module';
 import { PersonState } from './person-state/entities/person-state.entity';
+import { LoanStateModule } from './loan-state/loan-state.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { PersonState } from './person-state/entities/person-state.entity';
     AuthModule,
     RoleModule,
     PermissionModule,
-    PersonStateModule
+    PersonStateModule,
+    LoanStateModule
   ],
   controllers: [AppController],
   providers: [AppService],
