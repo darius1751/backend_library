@@ -24,6 +24,8 @@ import { CategoryModule } from './category/category.module';
 import { Category } from './category/entities/category.entity';
 import { ReservationStateModule } from './reservation-state/reservation-state.module';
 import { ReservationState } from './reservation-state/entities/reservation-state.entity';
+import { DevolutionStateModule } from './devolution-state/devolution-state.module';
+import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
 
 @Module({
   imports: [
@@ -51,7 +53,8 @@ import { ReservationState } from './reservation-state/entities/reservation-state
         PersonState,
         Author,
         Category,
-        ReservationState
+        ReservationState,
+        DevolutionState
       ]
     }),
     AuthModule,
@@ -61,7 +64,8 @@ import { ReservationState } from './reservation-state/entities/reservation-state
     LoanStateModule,
     AuthorModule,
     CategoryModule,
-    ReservationStateModule
+    ReservationStateModule,
+    DevolutionStateModule
   ],
   controllers: [AppController],
   providers: [AppService],
