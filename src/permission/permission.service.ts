@@ -12,11 +12,12 @@ export class PermissionService {
 
   async create(createPermissionDto:CreatePermissionDto){
     try{
-      await this.permissionRepository.create(createPermissionDto);
+      return this.permissionRepository.create(createPermissionDto);
     }catch(exception){
       throw new BadRequestException(`permission ${createPermissionDto.name} exist`);
     }
   }
+  
   findAll() {
     return this.permissionRepository.find();
   }
