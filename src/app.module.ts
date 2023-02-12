@@ -22,6 +22,8 @@ import { AuthorModule } from './author/author.module';
 import { Author } from './author/entities/author.entity';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/entities/category.entity';
+import { ReservationStateModule } from './reservation-state/reservation-state.module';
+import { ReservationState } from './reservation-state/entities/reservation-state.entity';
 
 @Module({
   imports: [
@@ -42,7 +44,15 @@ import { Category } from './category/entities/category.entity';
       port: parseInt(env.DATABASE_PORT),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Credential, Role, Permission, PersonState, Author, Category]
+      entities: [
+        Credential,
+        Role,
+        Permission,
+        PersonState,
+        Author,
+        Category,
+        ReservationState
+      ]
     }),
     AuthModule,
     RoleModule,
@@ -50,7 +60,8 @@ import { Category } from './category/entities/category.entity';
     PersonStateModule,
     LoanStateModule,
     AuthorModule,
-    CategoryModule
+    CategoryModule,
+    ReservationStateModule
   ],
   controllers: [AppController],
   providers: [AppService],
