@@ -1,1 +1,11 @@
-export class CreateRoleDto {}
+import { IsOptional, IsString } from "class-validator";
+
+export class CreateRoleDto {
+    
+    @IsString()
+    public readonly name:string;
+
+    @IsString()
+    @IsOptional()
+    public readonly description?:string;
+}
