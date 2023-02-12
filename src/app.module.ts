@@ -15,6 +15,8 @@ import { PermissionModule } from './permission/permission.module';
 import { Permission } from './permission/entities/permission.entity';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { PermissionController } from './permission/permission.controller';
+import { PersonStateModule } from './person-state/person-state.module';
+import { PersonState } from './person-state/entities/person-state.entity';
 
 @Module({
   imports: [
@@ -35,11 +37,12 @@ import { PermissionController } from './permission/permission.controller';
       port: parseInt(env.DATABASE_PORT),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Credential, Role, Permission]
+      entities: [Credential, Role, Permission, PersonState]
     }),
     AuthModule,
     RoleModule,
-    PermissionModule
+    PermissionModule,
+    PersonStateModule
   ],
   controllers: [AppController],
   providers: [AppService],
