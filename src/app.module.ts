@@ -26,6 +26,7 @@ import { ReservationStateModule } from './reservation-state/reservation-state.mo
 import { ReservationState } from './reservation-state/entities/reservation-state.entity';
 import { DevolutionStateModule } from './devolution-state/devolution-state.module';
 import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
+import { CopyBookStateModule } from './copy-book-state/copy-book-state.module';
 
 @Module({
   imports: [
@@ -65,7 +66,8 @@ import { DevolutionState } from './devolution-state/entities/devolution-state.en
     AuthorModule,
     CategoryModule,
     ReservationStateModule,
-    DevolutionStateModule
+    DevolutionStateModule,
+    CopyBookStateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
