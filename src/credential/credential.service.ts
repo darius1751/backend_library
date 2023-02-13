@@ -24,20 +24,20 @@ export class CredentialService {
       throw new BadRequestException(`FindOneById don't exist id in DB`);
     }
   }
-  
-  async create(createCredentialDto: CreateCredentialDto): Promise<string> {
+
+  create(createCredentialDto: CreateCredentialDto) {
     try {
-      const credential = await this.credentialRepository.create({
+      const credential = this.credentialRepository.create({
         ...createCredentialDto,
         password: hashSync(createCredentialDto.password, 10)
       });
-      return await credential.id;
+      return credential.id;
 
     } catch (exception) {
       throw new BadRequestException(`Error in create user: ${exception.message}`);
     }
   }
-  
+
   async login(loginCredentialDto: loginCredentialDto) {
     try {
       const { user, password } = loginCredentialDto;
