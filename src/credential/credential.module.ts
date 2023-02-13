@@ -11,6 +11,7 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule
   ],
   controllers: [CredentialController],
+  exports:[CredentialService],
   providers: [CredentialService],
 })
 export class CredentialModule {}

@@ -1,32 +1,38 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { env } from 'process';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CredentialModule } from './credential/credential.module';
-import { Credential } from './credential/entities/credential.entity';
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TestingModule } from '@nestjs/testing';
-import { RoleModule } from './role/role.module';
-import { Role } from './role/entities/role.entity';
-import { PermissionModule } from './permission/permission.module';
-import { Permission } from './permission/entities/permission.entity';
+import { env } from 'process';
+
+import { AppService } from './app.service';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AppController } from './app.controller';
 import { PermissionController } from './permission/permission.controller';
+
+
+import { CredentialModule } from './credential/credential.module';
+import { AuthModule } from './auth/auth.module';
+import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
 import { PersonStateModule } from './person-state/person-state.module';
-import { PersonState } from './person-state/entities/person-state.entity';
 import { LoanStateModule } from './loan-state/loan-state.module';
 import { AuthorModule } from './author/author.module';
-import { Author } from './author/entities/author.entity';
 import { CategoryModule } from './category/category.module';
-import { Category } from './category/entities/category.entity';
 import { ReservationStateModule } from './reservation-state/reservation-state.module';
-import { ReservationState } from './reservation-state/entities/reservation-state.entity';
 import { DevolutionStateModule } from './devolution-state/devolution-state.module';
-import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
 import { CopyBookStateModule } from './copy-book-state/copy-book-state.module';
+import { PersonModule } from './person/person.module';
+
+import { Credential } from './credential/entities/credential.entity';
+import { Role } from './role/entities/role.entity';
+import { PersonState } from './person-state/entities/person-state.entity';
+import { Author } from './author/entities/author.entity';
+import { Category } from './category/entities/category.entity';
+import { ReservationState } from './reservation-state/entities/reservation-state.entity';
+import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
+import { Permission } from './permission/entities/permission.entity';
+import { Person } from './person/entities/person.entity';
 
 @Module({
   imports: [
@@ -55,7 +61,8 @@ import { CopyBookStateModule } from './copy-book-state/copy-book-state.module';
         Author,
         Category,
         ReservationState,
-        DevolutionState
+        DevolutionState,
+        Person
       ]
     }),
     AuthModule,
@@ -68,6 +75,7 @@ import { CopyBookStateModule } from './copy-book-state/copy-book-state.module';
     ReservationStateModule,
     DevolutionStateModule,
     CopyBookStateModule,
+    PersonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
