@@ -10,7 +10,6 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AppController } from './app.controller';
 import { PermissionController } from './permission/permission.controller';
 
-
 import { CredentialModule } from './credential/credential.module';
 import { AuthModule } from './auth/auth.module';
 import { RoleModule } from './role/role.module';
@@ -23,6 +22,8 @@ import { ReservationStateModule } from './reservation-state/reservation-state.mo
 import { DevolutionStateModule } from './devolution-state/devolution-state.module';
 import { CopyBookStateModule } from './copy-book-state/copy-book-state.module';
 import { PersonModule } from './person/person.module';
+import { BookModule } from './book/book.module';
+import { CopyBookModule } from './copy-book/copy-book.module';
 
 import { Credential } from './credential/entities/credential.entity';
 import { Role } from './role/entities/role.entity';
@@ -33,8 +34,8 @@ import { ReservationState } from './reservation-state/entities/reservation-state
 import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
 import { Permission } from './permission/entities/permission.entity';
 import { Person } from './person/entities/person.entity';
-import { BookModule } from './book/book.module';
 import { Book } from './book/entities/book.entity';
+import { CopyBook } from './copy-book/entities/copy-book.entity';
 
 @Module({
   imports: [
@@ -65,7 +66,8 @@ import { Book } from './book/entities/book.entity';
         ReservationState,
         DevolutionState,
         Person,
-        Book
+        Book,
+        CopyBook
       ]
     }),
     AuthModule,
@@ -80,6 +82,7 @@ import { Book } from './book/entities/book.entity';
     CopyBookStateModule,
     PersonModule,
     BookModule,
+    CopyBookModule,
   ],
   controllers: [AppController],
   providers: [AppService],
