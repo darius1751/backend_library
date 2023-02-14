@@ -11,6 +11,7 @@ import { AuthorModule } from 'src/author/author.module';
     AuthorModule
   ],
   controllers: [BookController],
-  providers: [BookService]
+  providers: [BookService],
+  exports:[BookService]
 })
 export class BookModule {}
