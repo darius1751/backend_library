@@ -10,27 +10,29 @@ export class RoleService {
   
   constructor(@InjectRepository(Role) private roleRepository:Repository<Role>){}
   
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
-  }
-
-  async findAll() {
+  async create(createRoleDto: CreateRoleDto) {
     try{
-      const roles = await this.roleRepository.find({
-        relations:{
-          permissions:true
-        }
-      });
-
-      return roles;
-      
+      const { generatedMaps } = await this.roleRepository.insert(createRoleDto);
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
     }catch(exception){
-      throw new InternalServerErrorException(`${exception}`);
+      const { code } = exception;
+      if(code === 'ER_DUP_ENTRY')
+        throw new BadRequestException(`Exist role with name: ${createRoleDto.name}`);
     }
     
   }
 
-  async findOne(id: string) {
+  async findAll() {
+    const roles = await this.roleRepository.find({
+      relations:{
+        permissions:true
+      }
+    });
+   return roles;
+  }
+
+  async findOneById(id: string) {
     
     const role = await this.roleRepository.findOneBy({id, permissions:true});
     if(role)

@@ -13,6 +13,6 @@ export class PermissionController {
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.permissionService.findOne(id);
+    return this.permissionService.findOneById(id);
   }
 }

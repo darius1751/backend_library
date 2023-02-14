@@ -18,11 +18,14 @@ export class CredentialService {
   ) { }
 
   async findOneById(id: string) {
-    try {
-      return await this.credentialRepository.findOneBy({ id });
-    } catch (exception) {
-      throw new BadRequestException(`FindOneById don't exist id in DB`);
-    }
+    
+      const credential = await this.credentialRepository.findOneBy({ id });
+      if(credential){
+        const { id, user } = credential;
+        return { id, user };
+      }
+      throw new BadRequestException(`Not exist credential with id: ${id}`);
+    
   }
 
   create(createCredentialDto: CreateCredentialDto) {

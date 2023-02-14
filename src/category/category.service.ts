@@ -10,9 +10,11 @@ export class CategoryService {
 
   constructor(@InjectRepository(Category) private categoryRepository:Repository<Category>){}
 
-  create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CreateCategoryDto) {
     try{
-      return this.categoryRepository.create(createCategoryDto);
+      const { generatedMaps } =  await this.categoryRepository.insert(createCategoryDto);
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
     }catch(exception){
       throw new InternalServerErrorException(`Error in create category ${exception.message}`);
     }
@@ -22,7 +24,7 @@ export class CategoryService {
     return this.categoryRepository.find();
   }
 
-  async findOne(id: string) {
+  async findOneById(id: string) {
     const category = await this.categoryRepository.findOneBy({id});
     if(category)
       return category;
@@ -30,7 +32,7 @@ export class CategoryService {
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    await this.findOne(id);
+    await this.findOneById(id);
     try{
       return await this.categoryRepository.update({id},updateCategoryDto);
     }catch(exception){

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateReservationStateDto } from './dto/create-reservation-state.dto';
@@ -13,9 +13,13 @@ export class ReservationStateService {
 
   async create(createReservationStateDto: CreateReservationStateDto) {
     try{
-      return this.reservationStateRepository.create(createReservationStateDto);
+      const { generatedMaps } = await this.reservationStateRepository.insert(createReservationStateDto);
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
     }catch(exception){
-      throw new InternalServerErrorException(`Error in create reservationState, exception: ${exception.message}`);
+      const { code } = exception;
+      if(code === 'ER_DUP_ENTRY')
+        throw new BadRequestException(`Exist reservationState with name ${createReservationStateDto.name}`);
     }
     
   }
@@ -24,4 +28,11 @@ export class ReservationStateService {
     return this.reservationStateRepository.find();
   }
   
+  async findOneById(id: string){
+    const reservationState = await this.reservationStateRepository.findOneBy({id});
+    if(reservationState)
+      return reservationState;
+    throw new BadRequestException(`Not exist reservationState with id: ${id}`);
+  }
+
 }

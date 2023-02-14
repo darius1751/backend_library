@@ -7,38 +7,42 @@ import { Author } from './entities/author.entity';
 
 @Injectable()
 export class AuthorService {
-  
-  constructor(
-    @InjectRepository(Author) private authorRepository:Repository<Author>
-  ){}
 
-  create(createAuthorDto: CreateAuthorDto) {
-    try{
-      return this.authorRepository.create(createAuthorDto);
-    }catch(exception){
-      throw new InternalServerErrorException(`Error in create author: ${exception}`);
+  constructor(
+    @InjectRepository(Author) private authorRepository: Repository<Author>
+  ) { }
+
+  async create(createAuthorDto: CreateAuthorDto) {
+    try {
+      const { generatedMaps } = await this.authorRepository.insert(createAuthorDto);
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
+    } catch (exception) {
+      const { code } = exception;
+      if (code === 'ER_DUP_ENTRY')
+        throw new BadRequestException(`Author ${createAuthorDto.name} exist in DB`);
     }
-    
+
   }
 
   findAll() {
     return this.authorRepository.find();
   }
 
-  async findOne(id: string) {
-      const author = await this.authorRepository.findOneBy({id});
-      if(author)
-        return author;
-      throw new BadRequestException(`Author with id: ${id} not exist`);
-    
+  async findOneById(id: string) {
+    const author = await this.authorRepository.findOneBy({ id });
+    if (author)
+      return author;
+    throw new BadRequestException(`Author with id: ${id} not exist`);
+
   }
 
   async update(id: string, updateAuthorDto: UpdateAuthorDto) {
-    await this.findOne(id);
-    try{
-      return await this.authorRepository.update({id}, updateAuthorDto);  
-    }catch(exception){
+    await this.findOneById(id);
+    try {
+      return await this.authorRepository.update({ id }, updateAuthorDto);
+    } catch (exception) {
       throw new InternalServerErrorException(`Error to update Author, exception: ${exception.message}`);
-    }      
+    }
   }
 }

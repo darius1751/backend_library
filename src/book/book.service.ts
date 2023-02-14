@@ -20,7 +20,7 @@ export class BookService {
     return `This action returns all book`;
   }
 
-  findOne(id: string) {
+  findOneById(id: string) {
     return `This action returns a #${id} book`;
   }
 

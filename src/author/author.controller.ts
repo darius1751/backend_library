@@ -18,8 +18,8 @@ export class AuthorController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.authorService.findOne(id);
+  findOneById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authorService.findOneById(id);
   }
 
   @Patch(':id')

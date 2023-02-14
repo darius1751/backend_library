@@ -19,8 +19,8 @@ export class BookController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.bookService.findOne(id);
+  findOneById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.bookService.findOneById(id);
   }
 
   @Patch(':id')

@@ -12,8 +12,8 @@ export class RoleController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.roleService.findOne(id);
+  findOneById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.roleService.findOneById(id);
   }
 
   

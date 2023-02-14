@@ -22,10 +22,12 @@ export class PersonService {
 
     try {
 
-      return this.personRepository.create({
+      const { generatedMaps } = await  this.personRepository.insert({
         ...createPersonDto,
         credential: { id: credentialId }
-      })
+      });
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
 
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create person, Exception : ${exception.message}`);
@@ -35,7 +37,7 @@ export class PersonService {
   async login(loginCredentialDto: loginCredentialDto) {
 
     const { id, token } = await this.credentialService.login(loginCredentialDto);
-    const person = this.findOneByCredentialId(id);
+    const person = await this.findOneByCredentialId(id);
     return { token, person }
   }
 
