@@ -33,6 +33,8 @@ import { ReservationState } from './reservation-state/entities/reservation-state
 import { DevolutionState } from './devolution-state/entities/devolution-state.entity';
 import { Permission } from './permission/entities/permission.entity';
 import { Person } from './person/entities/person.entity';
+import { BookModule } from './book/book.module';
+import { Book } from './book/entities/book.entity';
 
 @Module({
   imports: [
@@ -62,7 +64,8 @@ import { Person } from './person/entities/person.entity';
         Category,
         ReservationState,
         DevolutionState,
-        Person
+        Person,
+        Book
       ]
     }),
     AuthModule,
@@ -76,6 +79,7 @@ import { Person } from './person/entities/person.entity';
     DevolutionStateModule,
     CopyBookStateModule,
     PersonModule,
+    BookModule,
   ],
   controllers: [AppController],
   providers: [AppService],
