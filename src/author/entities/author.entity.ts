@@ -8,6 +8,8 @@ export class Author {
     })
     public readonly id:string;
 
-    @Column()
+    @Column({
+        unique:true
+    })
     public readonly name:string;
 }

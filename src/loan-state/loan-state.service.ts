@@ -9,13 +9,22 @@ export class LoanStateService {
   
   constructor(@InjectRepository(LoanState) private loanStateRepository:Repository<LoanState>){}
   
-  create(createLoanStateDto: CreateLoanStateDto) {
+  async create(createLoanStateDto: CreateLoanStateDto) {
     try{
-      return this.loanStateRepository.create(createLoanStateDto);
+      const { generatedMaps } = await this.loanStateRepository.insert(createLoanStateDto);
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
     }catch(exception){
       throw new BadRequestException(`Error in create loadState: ${exception}`);
     }
     
+  }
+
+  async findOneById(id:string){
+    const loanState = await this.loanStateRepository.findOneBy({id})
+    if(loanState)
+      return loanState;
+    throw new BadRequestException(`Not exist loanState with id: ${id}`);
   }
 
   findAll() {
@@ -24,7 +33,8 @@ export class LoanStateService {
     }catch(exception){
       throw new InternalServerErrorException(`${exception.message}`);
     }
-    
   }
+
+  
 
 }
