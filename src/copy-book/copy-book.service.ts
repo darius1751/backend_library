@@ -14,8 +14,17 @@ export class CopyBookService {
     private bookService: BookService
   ) { }
 
-  create(createCopyBookDto: CreateCopyBookDto) {
-    return 'This action adds a new copyBook';
+  async create(createCopyBookDto: CreateCopyBookDto) {
+    const { bookId } = createCopyBookDto;
+    await this.bookService.findOneById(bookId);
+    try {
+      const { generatedMaps } = await this.copyBookRepository.insert({ book: { id: bookId } });
+      const { id } = generatedMaps[0];
+      return await this.findOneById(id);
+    } catch (exception) {
+      throw new InternalServerErrorException(`Error in create copyBook: ${exception.message}`);
+    }
+
   }
 
   async findAllByBookId(id: string) {
@@ -38,7 +47,11 @@ export class CopyBookService {
   async update(id: string, updateCopyBookDto: UpdateCopyBookDto) {
     await this.findOneById(id);
     try {
-      return await this.copyBookRepository.update({ id }, updateCopyBookDto);
+      return await this.copyBookRepository.update({ id }, {
+        copyBookState: {
+          id: updateCopyBookDto.copyBookStateId
+        }
+      });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in update copyBook: ${exception.message}`);
     }
