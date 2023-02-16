@@ -22,7 +22,7 @@ export class PersonService {
 
     try {
 
-      const { generatedMaps } = await  this.personRepository.insert({
+      const { generatedMaps } = await this.personRepository.insert({
         ...createPersonDto,
         credential: { id: credentialId }
       });

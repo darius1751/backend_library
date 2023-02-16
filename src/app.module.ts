@@ -36,6 +36,8 @@ import { Permission } from './permission/entities/permission.entity';
 import { Person } from './person/entities/person.entity';
 import { Book } from './book/entities/book.entity';
 import { CopyBook } from './copy-book/entities/copy-book.entity';
+import { LoanModule } from './loan/loan.module';
+import { Loan } from './loan/entities/loan.entity';
 
 @Module({
   imports: [
@@ -67,7 +69,8 @@ import { CopyBook } from './copy-book/entities/copy-book.entity';
         DevolutionState,
         Person,
         Book,
-        CopyBook
+        CopyBook,
+        Loan
       ]
     }),
     AuthModule,
@@ -83,6 +86,7 @@ import { CopyBook } from './copy-book/entities/copy-book.entity';
     PersonModule,
     BookModule,
     CopyBookModule,
+    LoanModule,
   ],
   controllers: [AppController],
   providers: [AppService],

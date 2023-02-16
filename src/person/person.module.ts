@@ -12,6 +12,7 @@ import { CredentialModule } from 'src/credential/credential.module';
     CredentialModule
   ],
   controllers: [PersonController],
-  providers: [PersonService]
+  providers: [PersonService],
+  exports:[ PersonService ]
 })
 export class PersonModule {}
