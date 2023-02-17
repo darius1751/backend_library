@@ -1,12 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  ParseUUIDPipe,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { LoanService } from './loan.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
 
 @Controller('loan')
 export class LoanController {
-
-  constructor(private readonly loanService: LoanService) {}
+  
+  constructor(private readonly loanService: LoanService) { }
 
   @Post()
   create(@Body() createLoanDto: CreateLoanDto) {
@@ -14,7 +24,10 @@ export class LoanController {
   }
 
   @Get()
-  findAll(@Query('skip', ParseIntPipe) skip: number, @Query('take', ParseIntPipe) take: number) {
+  findAll(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+  ) {
     return this.loanService.findAll(skip, take);
   }
 
@@ -22,17 +35,21 @@ export class LoanController {
   findAllByPersonId(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('skip', ParseIntPipe) skip: number,
-    @Query('take', ParseIntPipe) take: number
-  ){
+    @Query('take', ParseIntPipe) take: number,
+  ) {
     return this.loanService.findAllByPersonId(id, skip, take);
   }
+
   @Get(':id')
   findOneById(@Param('id', ParseUUIDPipe) id: string) {
     return this.loanService.findOneById(id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateLoanDto: UpdateLoanDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateLoanDto: UpdateLoanDto,
+  ) {
     return this.loanService.update(id, updateLoanDto);
   }
 }

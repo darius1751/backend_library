@@ -25,7 +25,8 @@ export class LoanService {
       },
       person: {
         id: personId
-      }
+      },
+      returnDate: returnDate.toJSON()
     });
     const { id } = generatedMaps[0];
     return await this.findOneById(id);
