@@ -11,6 +11,7 @@ import { BookModule } from 'src/book/book.module';
     BookModule
   ],
   controllers: [CopyBookController],
-  providers: [CopyBookService]
+  providers: [CopyBookService],
+  exports: [CopyBookService]
 })
 export class CopyBookModule {}
