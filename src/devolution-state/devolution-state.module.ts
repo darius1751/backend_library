@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DevolutionState } from './entities/devolution-state.entity';
 
 @Module({
-  imports:[
+  imports: [
     TypeOrmModule.forFeature([DevolutionState])
   ],
   controllers: [DevolutionStateController],
-  providers: [DevolutionStateService]
+  providers: [DevolutionStateService],
+  exports: [DevolutionStateService]
 })
-export class DevolutionStateModule {}
+export class DevolutionStateModule { }

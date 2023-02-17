@@ -11,6 +11,7 @@ import { PersonModule } from 'src/person/person.module';
     PersonModule
   ],
   controllers: [LoanController],
-  providers: [LoanService]
+  providers: [LoanService],
+  exports:[ LoanService ]
 })
 export class LoanModule {}
