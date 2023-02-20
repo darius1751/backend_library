@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LoanService } from 'src/loan/loan.service';
 import { Repository } from 'typeorm';
 import { CreateRenewalDto } from './dto/create-renewal.dto';
 import { UpdateRenewalDto } from './dto/update-renewal.dto';
@@ -9,11 +11,15 @@ import { Renewal } from './entities/renewal.entity';
 export class RenewalService {
 
   constructor(
-    @InjectRepository(Renewal) private renewalRepository: Repository<Renewal>
+    @InjectRepository(Renewal) private renewalRepository: Repository<Renewal>,
+    private configService: ConfigService,
+    private loanService: LoanService    
   ){}
   
-  create(createRenewalDto: CreateRenewalDto) {
-    return 'This action adds a new renewal';
+  async create(createRenewalDto: CreateRenewalDto) {
+    const { loanId, newReturnDate } = createRenewalDto;
+    const loan = await this.loanService.findOneById(loanId);
+    
   }
 
   async findAll(skip: number, take: number) {
@@ -32,12 +38,16 @@ export class RenewalService {
       return renewal;
     throw new BadRequestException(`Not exist renewal with id: ${id}`);
   }
+  
+  async getCountRenewalsOfLoan(loanId: string): Promise<number>{
+    return await this.renewalRepository.countBy({
+      loan:{
+        id: loanId
+      }
+    });
+  }
 
   update(id: string, updateRenewalDto: UpdateRenewalDto) {
     return `This action updates a #${id} renewal`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} renewal`;
   }
 }

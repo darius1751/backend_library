@@ -29,9 +29,4 @@ export class RenewalController {
   update(@Param('id') id: string, @Body() updateRenewalDto: UpdateRenewalDto) {
     return this.renewalService.update(id, updateRenewalDto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.renewalService.remove(id);
-  }
 }
