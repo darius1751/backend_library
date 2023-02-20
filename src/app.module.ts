@@ -49,7 +49,7 @@ import { Renewal } from './renewal/entities/renewal.entity';
   imports: [
     CredentialModule,
     TestingModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({isGlobal: true}),
     JwtModule.register({
       secret: env.SECRET,
       signOptions: { expiresIn: '10h' }
