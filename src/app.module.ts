@@ -42,6 +42,8 @@ import { DevolutionModule } from './devolution/devolution.module';
 import { Devolution } from './devolution/entities/devolution.entity';
 import { ReservationModule } from './reservation/reservation.module';
 import { Reservation } from './reservation/entities/reservation.entity';
+import { RenewalModule } from './renewal/renewal.module';
+import { Renewal } from './renewal/entities/renewal.entity';
 
 @Module({
   imports: [
@@ -76,7 +78,8 @@ import { Reservation } from './reservation/entities/reservation.entity';
         CopyBook,
         Loan,
         Devolution,
-        Reservation
+        Reservation,
+        Renewal
       ]
     }),
     AuthModule,
@@ -95,6 +98,7 @@ import { Reservation } from './reservation/entities/reservation.entity';
     LoanModule,
     DevolutionModule,
     ReservationModule,
+    RenewalModule,
   ],
   controllers: [AppController],
   providers: [AppService],
