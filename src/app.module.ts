@@ -44,6 +44,7 @@ import { ReservationModule } from './reservation/reservation.module';
 import { Reservation } from './reservation/entities/reservation.entity';
 import { RenewalModule } from './renewal/renewal.module';
 import { Renewal } from './renewal/entities/renewal.entity';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -99,6 +100,7 @@ import { Renewal } from './renewal/entities/renewal.entity';
     DevolutionModule,
     ReservationModule,
     RenewalModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
