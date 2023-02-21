@@ -9,6 +9,7 @@ import { ReservationState } from './entities/reservation-state.entity';
     TypeOrmModule.forFeature([ReservationState])
   ],
   controllers: [ReservationStateController],
-  providers: [ReservationStateService]
+  providers: [ReservationStateService],
+  exports:[ReservationStateService]
 })
 export class ReservationStateModule {}
