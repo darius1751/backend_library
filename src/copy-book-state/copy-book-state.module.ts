@@ -9,6 +9,7 @@ import { CopyBookState } from './entities/copy-book-state.entity';
     TypeOrmModule.forFeature([CopyBookState])
   ],
   controllers: [CopyBookStateController],
-  providers: [CopyBookStateService]
+  providers: [CopyBookStateService],
+  exports:[CopyBookStateService]
 })
 export class CopyBookStateModule {}

@@ -16,9 +16,7 @@ export class BookService {
 
   async create(createBookDto: CreateBookDto) {
     try {
-      const { generatedMaps } = await this.bookRepository.insert(createBookDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.bookRepository.save(createBookDto);
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create book: ${exception.message}`);
     }

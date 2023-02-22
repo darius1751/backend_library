@@ -11,9 +11,7 @@ export class LoanStateService {
   
   async create(createLoanStateDto: CreateLoanStateDto) {
     try{
-      const { generatedMaps } = await this.loanStateRepository.insert(createLoanStateDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.loanStateRepository.save(createLoanStateDto);
     }catch(exception){
       throw new BadRequestException(`Error in create loadState: ${exception}`);
     }

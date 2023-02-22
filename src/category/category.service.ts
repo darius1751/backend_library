@@ -12,9 +12,7 @@ export class CategoryService {
 
   async create(createCategoryDto: CreateCategoryDto) {
     try{
-      const { generatedMaps } =  await this.categoryRepository.insert(createCategoryDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.categoryRepository.save(createCategoryDto);
     }catch(exception){
       throw new InternalServerErrorException(`Error in create category ${exception.message}`);
     }

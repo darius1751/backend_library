@@ -12,9 +12,7 @@ export class PermissionService {
 
   async create(createPermissionDto:CreatePermissionDto){
     try{
-      const { generatedMaps } = await this.permissionRepository.insert(createPermissionDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.permissionRepository.save(createPermissionDto);
     }catch(exception){
       throw new BadRequestException(`permission ${createPermissionDto.name} exist`);
     }

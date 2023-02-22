@@ -9,6 +9,7 @@ import { PersonState } from './entities/person-state.entity';
     TypeOrmModule.forFeature([PersonState])
   ],
   controllers: [PersonStateController],
-  providers: [PersonStateService]
+  providers: [PersonStateService],
+  exports:[PersonStateService]
 })
 export class PersonStateModule {}

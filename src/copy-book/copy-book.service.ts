@@ -18,9 +18,7 @@ export class CopyBookService {
     const { bookId } = createCopyBookDto;
     await this.bookService.findOneById(bookId);
     try {
-      const { generatedMaps } = await this.copyBookRepository.insert({ book: { id: bookId } });
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.copyBookRepository.save({ book: { id: bookId } });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create copyBook: ${exception.message}`);
     }

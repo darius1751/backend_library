@@ -25,7 +25,7 @@ export class DevolutionService {
     const loan = await this.loanService.findOneById(loanId);
     const devolutionState = await this.devolutionStateService.findOneById(devolutionStateId);
     try {
-      const { generatedMaps } = await this.devolutionRepository.insert({ 
+      return await this.devolutionRepository.save({ 
         annotations, 
         loan: {
           id: loanId 
@@ -34,10 +34,8 @@ export class DevolutionService {
           id: devolutionStateId
         } 
       });
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
     } catch (exception) {
-
+      throw new InternalServerErrorException(`Error in create devolution, exception: ${exception.message}`);
     }
 
   }

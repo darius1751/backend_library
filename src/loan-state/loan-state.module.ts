@@ -9,6 +9,7 @@ import { LoanState } from './entities/loan-state.entity';
     TypeOrmModule.forFeature([LoanState])
   ],
   controllers: [LoanStateController],
-  providers: [LoanStateService]
+  providers: [LoanStateService],
+  exports:[LoanStateService]
 })
 export class LoanStateModule {}

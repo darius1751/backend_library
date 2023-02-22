@@ -18,17 +18,14 @@ export class PersonService {
   async create(createPersonDto: CreatePersonDto) {
 
     const { credential } = createPersonDto;
-    const credentialId = this.credentialService.create(credential);
+    const credentialId = await this.credentialService.create(credential);
 
     try {
 
-      const { generatedMaps } = await this.personRepository.insert({
+      return await this.personRepository.save({
         ...createPersonDto,
         credential: { id: credentialId }
       });
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
-
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create person, Exception : ${exception.message}`);
     }
