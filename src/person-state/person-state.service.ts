@@ -15,9 +15,7 @@ export class PersonStateService {
 
   async create(createPersonStateDto: CreatePersonStateDto) {
     try {
-      const { generatedMaps } = await this.personStateRepository.insert(createPersonStateDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.personStateRepository.save(createPersonStateDto);
     } catch (exception) {
       const { code } = exception;
       if (code === 'ER_DUP_ENTRY')

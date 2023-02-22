@@ -13,9 +13,7 @@ export class DevolutionStateService {
 
   async create(createDevolutionStateDto: CreateDevolutionStateDto) {
     try{
-      const { generatedMaps } =  await this.devolutionStateRepository.insert(createDevolutionStateDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.devolutionStateRepository.save(createDevolutionStateDto);
     }catch(exception){
       throw new InternalServerErrorException(`Error in create devolutionState, Exception: ${exception}`);
     }

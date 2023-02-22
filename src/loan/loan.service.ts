@@ -19,7 +19,7 @@ export class LoanService {
     const returnDate = new Date();
     returnDate.setDate(returnDate.getDate() + 7);
     const { copyBookId, personId } = createLoanDto;
-    const { generatedMaps } = await this.loanRepository.insert({
+    return await this.loanRepository.save({
       copyBook: {
         id: copyBookId
       },
@@ -28,8 +28,6 @@ export class LoanService {
       },
       returnDate: returnDate.toJSON()
     });
-    const { id } = generatedMaps[0];
-    return await this.findOneById(id);
   }
 
   findAll(skip: number, take: number) {

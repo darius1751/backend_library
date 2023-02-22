@@ -11,9 +11,7 @@ export class CopyBookStateService {
 
   async create(createCopyBookStateDto: CreateCopyBookStateDto) {
     try {
-      const { generatedMaps } = await this.copyBookStateRepository.insert(createCopyBookStateDto);
-      const { id } = generatedMaps[0];
-      return await this.findOne(id);
+      return await this.copyBookStateRepository.save(createCopyBookStateDto);
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create copyBookState, Exception: ${exception.message}`);
     }

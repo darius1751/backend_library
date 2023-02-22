@@ -14,9 +14,7 @@ export class AuthorService {
 
   async create(createAuthorDto: CreateAuthorDto) {
     try {
-      const { generatedMaps } = await this.authorRepository.insert(createAuthorDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      return await this.authorRepository.save(createAuthorDto);
     } catch (exception) {
       const { code } = exception;
       if (code === 'ER_DUP_ENTRY')

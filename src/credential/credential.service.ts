@@ -28,9 +28,9 @@ export class CredentialService {
     
   }
 
-  create(createCredentialDto: CreateCredentialDto) {
+  async create(createCredentialDto: CreateCredentialDto) {
     try {
-      const credential = this.credentialRepository.create({
+      const credential = await this.credentialRepository.save({
         ...createCredentialDto,
         password: hashSync(createCredentialDto.password, 10)
       });

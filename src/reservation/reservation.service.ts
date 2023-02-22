@@ -18,7 +18,7 @@ export class ReservationService {
 
   async create(createReservationDto: CreateReservationDto) {
     const { copyBookId, personId } = createReservationDto;
-    const {  generatedMaps } = await this.reservationRepository.insert({
+    return await this.reservationRepository.save({
       copyBook: { 
         id: copyBookId
       },
@@ -26,8 +26,6 @@ export class ReservationService {
         id: personId
       }
     });
-    const { id } = generatedMaps[0];
-    return await this.findOneById(id);
   }
 
   async findAll(skip: number, take: number) {
