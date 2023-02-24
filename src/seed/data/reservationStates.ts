@@ -10,4 +10,4 @@ export const reservationStates: CreateReservationStateDto[] = [
     {
         name:'Sin reclamar - Expirado'
     }
-]
+];

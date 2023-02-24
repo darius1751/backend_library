@@ -56,7 +56,8 @@ export class Book {
 
     @CreateDateColumn({
         type:'timestamp',
-        name:'created_at'
+        name:'created_at',
+        nullable: false
     })
     public readonly createdAt: string;
 

@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsDateString, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateBookDto {
 
@@ -8,7 +8,7 @@ export class CreateBookDto {
     @IsString()
     public readonly title: string;
 
-    @IsDate()
+    @IsDateString()
     public readonly publicationDate: string;
 
     @IsUUID()

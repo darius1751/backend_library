@@ -8,6 +8,11 @@ export class SeedController {
 
   @Post()
   implementSeed() {
-    return this.seedService.implementSeed();
+    return this.seedService.implementSeed(); 
+  }
+
+  @Post('roles')
+  implementSeedRoles(){
+    return this.seedService.implementedRoles();
   }
 }

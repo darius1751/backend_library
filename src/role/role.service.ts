@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionService } from 'src/permission/permission.service';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './entities/role.entity';
@@ -7,15 +8,26 @@ import { Role } from './entities/role.entity';
 @Injectable()
 export class RoleService {
   
-  constructor(@InjectRepository(Role) private roleRepository:Repository<Role>){}
+  constructor(
+    @InjectRepository(Role) private roleRepository:Repository<Role>,
+    private permissionService: PermissionService
+  ){}
   
   async create(createRoleDto: CreateRoleDto) {
     try{
-      const { generatedMaps } = await this.roleRepository.insert(createRoleDto);
-      const { id } = generatedMaps[0];
-      return await this.findOneById(id);
+      const { name, description, permissionCodes } = createRoleDto;
+      const permissions = await this.permissionService.findIdsByCodes(permissionCodes);
+      return await this.roleRepository.save({
+        name, 
+        description,
+        permissions
+      },{
+        reload: true
+      });
+
     }catch(exception){
       const { code } = exception;
+      console.log({exception});
       if(code === 'ER_DUP_ENTRY')
         throw new BadRequestException(`Exist role with name: ${createRoleDto.name}`);
     }
@@ -26,6 +38,11 @@ export class RoleService {
     const roles = await this.roleRepository.find({
       relations:{
         permissions:true
+      },
+      order:{
+        permissions:{
+          code:'ASC'
+        }
       }
     });
    return roles;

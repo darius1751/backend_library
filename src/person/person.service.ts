@@ -50,7 +50,7 @@ export class PersonService {
   findAll(skip: number, take: number) {
     return this.personRepository.find({
       skip, take, order: {
-        name: 'ASC'
+        name: 'DESC'
       }
     });
   }

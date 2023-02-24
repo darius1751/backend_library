@@ -1,28 +1,26 @@
-import { Role } from "src/role/entities/role.entity";
-import { Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity,PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Permission {
-    
-    @PrimaryColumn({
-        generated:'uuid'
-    })
-    public readonly id:string;
 
-     
-    @Column({
-        nullable:false,
-        unique:true
+    @PrimaryColumn({
+        generated: 'uuid'
     })
-    public readonly name:string; 
-    
+    public readonly id: string;
+
+    @Column({
+        nullable: false,
+        unique: true
+    })
+    public readonly name: string;
+
     @Column({
         unique: true
     })
     public readonly code: number;
 
     @Column({
-        nullable:true
+        nullable: true
     })
-    public readonly description:string;
+    public readonly description: string;
 }

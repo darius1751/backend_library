@@ -45,6 +45,7 @@ import { Reservation } from './reservation/entities/reservation.entity';
 import { RenewalModule } from './renewal/renewal.module';
 import { Renewal } from './renewal/entities/renewal.entity';
 import { SeedModule } from './seed/seed.module';
+import { SeedController } from './seed/seed.controller';
 
 @Module({
   imports: [
@@ -109,6 +110,6 @@ export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
     consumer
     .apply(JwtMiddleware)
-    .forRoutes(AppController,PermissionController)
+    .forRoutes(AppController,PermissionController, SeedController)
   }
 }
