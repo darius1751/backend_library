@@ -25,6 +25,7 @@ import {
 
 @Injectable()
 export class SeedService {
+
   constructor(
     private authorService: AuthorService,
     private categoryService: CategoryService,
@@ -37,7 +38,7 @@ export class SeedService {
     private roleService: RoleService,
   ) { }
 
-  implementSeed() {
+  async implementSeed() {
     personStates.forEach(
       async (personState) => await this.personStateService.create(personState)
     );
@@ -59,14 +60,17 @@ export class SeedService {
     reservationStates.forEach(
       async (reservationState) => await this.reservationStateService.create(reservationState)
     );
-
-    roles.forEach(
-      async (role) => await this.roleService.create(role)
-    );
-
     authors.forEach(
       async (author) => await this.authorService.create(author)
     );
     return { message: 'Ok implement seed :D' }
   }
+ 
+  async implementedRoles(){
+    roles.forEach(
+      async (role) => await this.roleService.create(role)
+    );
+    return { message:'Ok implement seed role.' };
+  }
+  
 }

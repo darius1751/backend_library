@@ -97,4 +97,3 @@ export const permissions: CreatePermissionDto[] = [
         description:'Puede ver todas las renovaciones realizadas por un usuario especifico'
     }
 ]
-

@@ -18,6 +18,7 @@ export class LoanService {
   async create(createLoanDto: CreateLoanDto) {
     const returnDate = new Date();
     returnDate.setDate(returnDate.getDate() + 7);
+    //Validar si el usuario tiene un estado activo, validar que el libro este disponible
     const { copyBookId, personId } = createLoanDto;
     return await this.loanRepository.save({
       copyBook: {

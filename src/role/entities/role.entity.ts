@@ -24,7 +24,7 @@ export class Role {
     @JoinTable({
         name:'permission_x_role'
     })
-    @ManyToMany(() => Permission, {
+    @ManyToMany(() => Permission,(permission) => permission.id, {
         nullable: false
     })
     public readonly permissions:Permission[];
