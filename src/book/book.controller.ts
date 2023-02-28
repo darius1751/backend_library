@@ -1,4 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile,  Header, UseFilters } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
+import { validateFile } from 'src/helpers/validateFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -9,9 +13,31 @@ export class BookController {
   constructor(private readonly bookService: BookService) { }
 
   @Post()
-  create(@Body() createBookDto: CreateBookDto) {
+  @UseInterceptors(FileInterceptor('frontPage', {
+    storage: diskStorage({
+      destination: 'images',
+      filename: validateFile
+    })
+  }))
+  create(
+    @UploadedFile() frontPage: Express.Multer.File,
+    @Body() createBookDto: CreateBookDto
+  ) {
+    const { originalname } = frontPage;
+    createBookDto.frontPage = originalname;
     return this.bookService.create(createBookDto);
   }
+  
+  @Get('frontPage/:codeWithExtension')
+  @Header('content-disposition','inline')
+  @Header('content-type','octet-stream')
+  @UseFilters(ExceptionFileFilter)
+  findFrontPageByCode(
+    @Param('codeWithExtension') codeWithExtension: string
+  ){
+      return this.bookService.findFrontPageByCode(codeWithExtension);      
+  }
+
 
   @Get(':id')
   findOneById(@Param('id', ParseUUIDPipe) id: string) {
@@ -19,8 +45,8 @@ export class BookController {
   }
 
   @Get('')
-  findOneByCode(@Param('code') code: string){
-    return this.bookService.findOneByCode(code);  
+  findOneByCode(@Param('code') code: string) {
+    return this.bookService.findOneByCode(code);
   }
 
   @Get()
@@ -31,15 +57,15 @@ export class BookController {
     return this.bookService.findAll(skip, take);
   }
 
-  
-  
+
+
   @Get('category/:name')
-  findAllByCategoryName(@Param('name') name:string){
+  findAllByCategoryName(@Param('name') name: string) {
     return this.bookService.findAllByCategoryName(name);
   }
-  
+
   @Get('author/:id')
-  findAllByAuthorId(@Param('id', ParseUUIDPipe) id: string){
+  findAllByAuthorId(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookService.findAllByAuthorId(id);
   }
 
