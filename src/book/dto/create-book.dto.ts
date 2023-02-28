@@ -17,4 +17,8 @@ export class CreateBookDto {
     @IsString()
     @IsOptional()
     public readonly description?: string;
+
+    @IsString()
+    @IsOptional()
+    public frontPage?: string;
 }

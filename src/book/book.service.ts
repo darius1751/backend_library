@@ -1,5 +1,7 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createReadStream, existsSync } from 'fs';
+import { join } from 'path';
 import { AuthorService } from 'src/author/author.service';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -15,12 +17,27 @@ export class BookService {
   ) { }
 
   async create(createBookDto: CreateBookDto) {
+    const { authorId, ...createBook } = createBookDto;
     try {
-      return await this.bookRepository.save(createBookDto);
+      return await this.bookRepository.save({
+        ...createBook,
+        author:{
+          id: authorId
+        }                
+      });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create book: ${exception.message}`);
     }
 
+  }
+  findFrontPageByCode(codeWithExtension: string){
+    
+      const path = join(__dirname,'..','..','images',codeWithExtension);
+      if(existsSync(path)){
+        const file = createReadStream(path)
+        return new StreamableFile(file);
+      }
+      throw new BadRequestException(`Error in find file`);   
   }
 
   findAll(skip: number, take: number) {
