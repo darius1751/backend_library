@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile,  Header, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile,  Header, UseFilters, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
@@ -44,7 +44,7 @@ export class BookController {
     return this.bookService.findOneById(id);
   }
 
-  @Get('')
+  @Get('code/:code')
   findOneByCode(@Param('code') code: string) {
     return this.bookService.findOneByCode(code);
   }
@@ -56,8 +56,6 @@ export class BookController {
   ) {
     return this.bookService.findAll(skip, take);
   }
-
-
 
   @Get('category/:name')
   findAllByCategoryName(@Param('name') name: string) {

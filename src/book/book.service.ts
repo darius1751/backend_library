@@ -70,7 +70,7 @@ export class BookService {
 
   async findAllByAuthorId(id: string) {
     await this.authorService.findOneById(id);
-    return await this.bookRepository.findOneBy({ author: { id } });
+    return await this.bookRepository.findBy({ author: { id } });
   }
 
   async update(id: string, updateBookDto: UpdateBookDto) {
