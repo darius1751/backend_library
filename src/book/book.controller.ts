@@ -35,7 +35,7 @@ export class BookController {
   findFrontPageByCode(
     @Param('codeWithExtension') codeWithExtension: string
   ){
-      return this.bookService.findFrontPageByCode(codeWithExtension);      
+    return this.bookService.findFrontPageByCode(codeWithExtension);      
   }
 
 
