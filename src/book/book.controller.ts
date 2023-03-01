@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile,  Header, UseFilters, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile, Header, UseFilters, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
@@ -27,15 +27,15 @@ export class BookController {
     createBookDto.frontPage = originalname;
     return this.bookService.create(createBookDto);
   }
-  
+
   @Get('frontPage/:codeWithExtension')
-  @Header('content-disposition','inline')
-  @Header('content-type','octet-stream')  
+  @Header('content-disposition', 'inline')
+  @Header('content-type', 'octet-stream')
   @UseFilters(ExceptionFileFilter)
   findFrontPageByCode(
     @Param('codeWithExtension') codeWithExtension: string
-  ){
-    return this.bookService.findFrontPageByCode(codeWithExtension);      
+  ) {
+    return this.bookService.findFrontPageByCode(codeWithExtension);
   }
 
 
