@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException, StreamableFile } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
+import { createReadStream, existsSync } from 'fs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -20,14 +21,16 @@ export class CategoryService {
     }
   }
 
-  findAll(skip: number, take: number) {
-    return this.categoryRepository.find({
+  async findAll(skip: number, take: number) {
+    const [categories, totalRegisters] = await this.categoryRepository.findAndCount({
       skip,
       take,
       order:{
         name:'ASC'
       }
     });
+    return { categories, pagination: generatePagination(skip, take, totalRegisters)}
+    
   }
 
   findImage(image: string){
