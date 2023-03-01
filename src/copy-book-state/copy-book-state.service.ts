@@ -23,6 +23,13 @@ export class CopyBookStateService {
       return copyBookState;
     throw new BadRequestException(`Not exist copyBookState with id: ${id}`);
   }
+  async findIdByName(name: string){
+    const copyBookState = await this.copyBookStateRepository.findOneBy({name});
+    if(copyBookState)
+      return copyBookState.id;
+    throw new BadRequestException(`Not exist copyBookState with name: ${name}`);
+  }
+
   findAll() {
     return this.copyBookStateRepository.find();
   }

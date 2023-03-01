@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CopyBookService } from 'src/copy-book/copy-book.service';
 import { generatePagination } from 'src/helpers/generatePagination';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';
@@ -13,14 +15,19 @@ export class LoanService {
 
   constructor(
     @InjectRepository(Loan) private loanRepository: Repository<Loan>,
-    private personService: PersonService
+    private personService: PersonService,
+    private copyBookService: CopyBookService,
+    private configService: ConfigService
   ) { }
 
   async create(createLoanDto: CreateLoanDto) {
-    const returnDate = new Date();
-    returnDate.setDate(returnDate.getDate() + 7);
-    //Validar si el usuario tiene un estado activo, validar que el libro este disponible
     const { copyBookId, personId } = createLoanDto;
+    this.personService.isActive(personId);
+    this.copyBookService.isAvailable(copyBookId);
+    this.copyBookService.loanCopyBook(copyBookId);
+    const returnDate = new Date();
+    returnDate.setDate(returnDate.getDate() + this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS'));
+    
     return await this.loanRepository.save({
       copyBook: {
         id: copyBookId
@@ -37,7 +44,7 @@ export class LoanService {
       skip,
       take,
       order: {
-        createdAt: 'ASC'
+        createdAt: 'DESC'
       }
     });
     return {
@@ -54,7 +61,7 @@ export class LoanService {
           person: { id }
         },
         order: {
-          createdAt: 'ASC'
+          createdAt: 'DESC'
         },
         skip,
         take
