@@ -20,8 +20,14 @@ export class CategoryService {
     }
   }
 
-  findAll() {
-    return this.categoryRepository.find();
+  findAll(skip: number, take: number) {
+    return this.categoryRepository.find({
+      skip,
+      take,
+      order:{
+        name:'ASC'
+      }
+    });
   }
 
   findImage(image: string){
