@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, UploadedFile, UseInterceptors, UseFilters, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, UploadedFile, UseInterceptors, UseFilters, Header, Query, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
@@ -36,8 +36,11 @@ export class CategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  findAll(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number
+  ) {
+    return this.categoryService.findAll(skip,take);
   }
 
   @Get(':id')
