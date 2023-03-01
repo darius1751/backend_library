@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
 import { DevolutionStateService } from 'src/devolution-state/devolution-state.service';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { LoanService } from 'src/loan/loan.service';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';
@@ -40,14 +41,20 @@ export class DevolutionService {
 
   }
 
-  findAll(skip: number, take: number) {
-    return this.devolutionRepository.find({
+  async findAll(skip: number, take: number) {
+    const [devolutions, totalRegisters] = await this.devolutionRepository.findAndCount({
       skip,
       take,
       order: {
         createdAt: 'ASC'
       }
     });
+    return {
+      devolutions,
+      pagination: {
+        ...generatePagination(skip, take, totalRegisters)
+      }
+    }
   }
 
   async findAllByPersonId(id: string, skip: number, take: number){

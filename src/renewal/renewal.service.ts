@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { LoanService } from 'src/loan/loan.service';
 import { Repository } from 'typeorm';
 import { CreateRenewalDto } from './dto/create-renewal.dto';
@@ -23,13 +24,17 @@ export class RenewalService {
   }
 
   async findAll(skip: number, take: number) {
-    return await this.renewalRepository.find({
+    const [renewals, totalRegisters] = await this.renewalRepository.findAndCount({
       skip,
       take,
       order:{
         createdAt:'DESC'
       }
     });
+    return {
+      renewals,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
 
   async findOneById(id: string) {

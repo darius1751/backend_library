@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialService } from 'src/credential/credential.service';
 import { loginCredentialDto } from 'src/credential/dto/login-credential.dto';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -47,12 +48,16 @@ export class PersonService {
     throw new BadRequestException(`Not exist person with documentIdentifier: ${documentIdentifier}`);
   }
 
-  findAll(skip: number, take: number) {
-    return this.personRepository.find({
+  async findAll(skip: number, take: number) {
+    const [persons, totalRegisters] = await this.personRepository.findAndCount({
       skip, take, order: {
-        name: 'DESC'
+        name: 'ASC'
       }
     });
+    return {
+      persons,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
 
 

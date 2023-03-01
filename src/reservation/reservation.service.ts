@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -29,10 +30,14 @@ export class ReservationService {
   }
 
   async findAll(skip: number, take: number) {
-    return await this.reservationRepository.find({
+    const [reservations, totalRegisters] =  await this.reservationRepository.findAndCount({
       skip,
       take
     });
+    return {
+      reservations,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
 
   async findOneById(id: string) {

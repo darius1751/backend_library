@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
 import { AuthorService } from 'src/author/author.service';
+import { generatePagination } from 'src/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -40,14 +41,18 @@ export class BookService {
       throw new BadRequestException(join('books','error.png'));   
   }
 
-  findAll(skip: number, take: number) {
-    return this.bookRepository.find({
+  async findAll(skip: number, take: number) {
+    const [books, totalRegisters] = await  this.bookRepository.findAndCount({
       order: {
         title: 'ASC'
       },
       skip,
       take
     });
+    return {
+      books, 
+      pagination: generatePagination(skip, take, totalRegisters)
+    };
   }
 
   async findOneById(id: string) {
