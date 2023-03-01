@@ -3,8 +3,8 @@ import { Request } from "express";
 import { extname } from "path";
 
 
-export const validateFile = (req: Request, file: Express.Multer.File, callback: (error: Error, filename: string) => void) => {
-  const validsExtensionsFile = ['.png', '.jpg', '.jpeg', '.gif'];
+export const validateImageFile = (req: Request, file: Express.Multer.File, callback: (error: Error, filename: string) => void) => {
+  const validsExtensionsFile = ['.png', '.jpg', '.jpeg', '.gif','.svg'];
   const { originalname } = file;
   const extensionFile = extname(originalname);
   const extension = validsExtensionsFile.find((extension) => extensionFile === extension);
