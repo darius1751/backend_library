@@ -32,12 +32,12 @@ export class BookService {
   }
   findFrontPageByCode(codeWithExtension: string){
     
-      const path = join(__dirname,'..','..','images',codeWithExtension);
+      const path = join(__dirname,'..','..','images','books',codeWithExtension);
       if(existsSync(path)){
         const file = createReadStream(path)
         return new StreamableFile(file);
       }
-      throw new BadRequestException(`Error in find file`);   
+      throw new BadRequestException(join('books','error.png'));   
   }
 
   findAll(skip: number, take: number) {

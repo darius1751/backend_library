@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseI
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
-import { validateFile } from 'src/helpers/validateFile';
+import { validateImageFile } from 'src/helpers/validateImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -15,8 +15,8 @@ export class BookController {
   @Post()
   @UseInterceptors(FileInterceptor('frontPage', {
     storage: diskStorage({
-      destination: 'images',
-      filename: validateFile
+      destination: 'images/books',
+      filename: validateImageFile
     })
   }))
   create(
@@ -30,7 +30,7 @@ export class BookController {
   
   @Get('frontPage/:codeWithExtension')
   @Header('content-disposition','inline')
-  @Header('content-type','octet-stream')
+  @Header('content-type','octet-stream')  
   @UseFilters(ExceptionFileFilter)
   findFrontPageByCode(
     @Param('codeWithExtension') codeWithExtension: string

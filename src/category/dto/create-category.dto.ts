@@ -6,5 +6,9 @@ export class CreateCategoryDto {
 
     @IsString()
     @IsOptional()
+    public image?: string;
+
+    @IsString()
+    @IsOptional()
     public readonly description?:string;
 }

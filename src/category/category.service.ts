@@ -1,5 +1,7 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createReadStream, existsSync } from 'fs';
+import { join } from 'path';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -20,6 +22,15 @@ export class CategoryService {
 
   findAll() {
     return this.categoryRepository.find();
+  }
+
+  findImage(image: string){
+    const path = join(__dirname, '..','..','images','categories',image);
+    if(existsSync(path)){
+      const imageFile = createReadStream(path);
+      return new StreamableFile(imageFile);
+    }
+    throw new BadRequestException(`categories`);
   }
 
   async findOneById(id: string) {
