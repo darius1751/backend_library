@@ -78,7 +78,16 @@ export class PersonService {
 
 
   public async findOneById(id: string) {
-    const person = this.personRepository.findOneBy({ id })
+    const person = this.personRepository.findOne(
+      { 
+        where:{
+          id
+        },
+        relations:{
+          personState:true
+        }
+      }
+    );
     if (person)
       return person;
     throw new BadRequestException(`Not exist person with id: ${id}`);

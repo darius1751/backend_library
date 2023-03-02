@@ -17,6 +17,13 @@ export class LoanStateService {
     }
     
   }
+  
+  async findIdByName(name: string){
+    const loan = await this.loanStateRepository.findOneBy({name});
+    if(loan)
+      return loan.id;
+    throw new BadRequestException(`Not exist loanState with name: ${name}`);
+  }
 
   async findOneById(id:string){
     const loanState = await this.loanStateRepository.findOneBy({id})
