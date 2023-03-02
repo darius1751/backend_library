@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialService } from 'src/credential/credential.service';
 import { loginCredentialDto } from 'src/credential/dto/login-credential.dto';
@@ -13,7 +14,8 @@ export class PersonService {
 
   constructor(
     @InjectRepository(Person) private personRepository: Repository<Person>,
-    private credentialService: CredentialService
+    private credentialService: CredentialService,
+    private configService: ConfigService
   ) { }
 
   async create(createPersonDto: CreatePersonDto) {
@@ -39,6 +41,12 @@ export class PersonService {
     return { token, person }
   }
 
+  async isActive(personId: string){
+    const person = await this.findOneById(personId);
+    const { personState } = person;
+    if(personState.name != this.configService.get<String>('ACCEPTABLE_PERSON_STATE'))
+      throw new ForbiddenException(`Not is active person state`);
+  }
 
   public async findOneByDocumentIdentifier(documentIdentifier: string) {
 

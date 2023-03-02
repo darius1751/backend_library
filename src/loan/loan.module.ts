@@ -4,11 +4,13 @@ import { LoanController } from './loan.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Loan } from './entities/loan.entity';
 import { PersonModule } from 'src/person/person.module';
+import { CopyBookModule } from 'src/copy-book/copy-book.module';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([Loan]),
-    PersonModule
+    PersonModule,
+    CopyBookModule
   ],
   controllers: [LoanController],
   providers: [LoanService],
