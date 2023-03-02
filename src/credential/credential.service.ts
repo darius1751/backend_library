@@ -42,7 +42,6 @@ export class CredentialService {
   }
 
   async login(loginCredentialDto: loginCredentialDto) {
-    try {
       const { user, password } = loginCredentialDto;
       const userDB = await this.credentialRepository.findOneBy({ user });
       if (compareSync(password, userDB?.password)) {
@@ -50,12 +49,9 @@ export class CredentialService {
         const token = this.authService.generateToken(id);
         return { id, token };
       }
-
-    } catch (exception) {
-      throw new BadRequestException(`Error in login user: ${exception.message}`);
+      throw new BadRequestException(`Error in login user: ${user}`);
     }
-  }
-
+  
   async update(id: string, updateCredentialDto: UpdateCredentialDto) {
     try {
       await this.findOneById(id);
