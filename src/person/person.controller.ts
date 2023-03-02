@@ -16,7 +16,7 @@ export class PersonController {
   }
 
   @Post('login')
-  login(loginCredentialDto: loginCredentialDto) {
+  login(@Body() loginCredentialDto: loginCredentialDto) {
     return this.personService.login(loginCredentialDto);
   }
 

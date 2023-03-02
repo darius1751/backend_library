@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, IsObject, IsPhoneNumber, IsString, IsUUID } from "class-validator";
+import { IsDateString, IsEmail, IsObject, IsPhoneNumber, IsString, IsUUID } from "class-validator";
 import { CreateCredentialDto } from "src/credential/dto/create-credential.dto";
 
 export class CreatePersonDto {
@@ -12,11 +12,14 @@ export class CreatePersonDto {
     @IsString()
     public readonly documentIdentifier: string;
 
-    @IsDate()
+    @IsDateString()
     public readonly birthday: string;
 
     @IsEmail()
     public readonly email: string;
+
+    @IsString()
+    public readonly address: string;
 
     @IsUUID()
     public readonly roleId: string;

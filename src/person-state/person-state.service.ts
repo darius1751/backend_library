@@ -22,6 +22,13 @@ export class PersonStateService {
         throw new BadRequestException(`personState:  ${createPersonStateDto.name} exist in DB`);
     }
   }
+  
+  async findIdByName(name: string){
+    const personState = await this.personStateRepository.findOneBy({name});
+    if(personState)
+      return personState.id;
+      throw new BadRequestException(`Not exist personState with name: ${name}`);
+  }
 
   async isAcceptable(id: string){
     const personState = await this.findOneById(id);
