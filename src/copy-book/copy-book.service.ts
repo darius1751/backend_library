@@ -77,14 +77,23 @@ export class CopyBookService {
   }
 
   async findOneById(id: string) {
-    const copyBook = await this.copyBookRepository.findOneBy({ id, book: true });
+    const copyBook = await this.copyBookRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        book: true,
+        copyBookState:true 
+      }
+    });
     if (copyBook)
       return copyBook;
     throw new BadRequestException(`Not exist copyBook with id: ${id}`);
   }
   
   async updateToLoanCopyBook(id: string){
-    const copyBookStateId = await this.copyBookStateService.findIdByName(this.configService.get<string>('LOAN_COPY_BOOK_STATE'));
+    const loanCopyBookState = this.configService.get<string>('LOAN_COPY_BOOK_STATE');
+    const copyBookStateId = await this.copyBookStateService.findIdByName(loanCopyBookState);
     this.update(id, { copyBookStateId });
   }
 

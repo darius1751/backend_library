@@ -25,6 +25,7 @@ export class CopyBookStateService {
   }
   async findIdByName(name: string){
     const copyBookState = await this.copyBookStateRepository.findOneBy({name});
+    console.log({copyBookState});
     if(copyBookState)
       return copyBookState.id;
     throw new BadRequestException(`Not exist copyBookState with name: ${name}`);

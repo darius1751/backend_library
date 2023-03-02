@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
 import { generatePagination } from 'src/helpers/generatePagination';
+import { LoanStateService } from 'src/loan-state/loan-state.service';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';
 import { CreateLoanDto } from './dto/create-loan.dto';
@@ -17,6 +18,7 @@ export class LoanService {
     @InjectRepository(Loan) private loanRepository: Repository<Loan>,
     private personService: PersonService,
     private copyBookService: CopyBookService,
+    private loanStateService:LoanStateService,
     private configService: ConfigService
   ) { }
 
@@ -25,10 +27,12 @@ export class LoanService {
     this.personService.isActive(personId);
     this.copyBookService.isAvailable(copyBookId);
     this.copyBookService.updateToLoanCopyBook(copyBookId);
+    const ACTIVE_LOAN_STATE = this.configService.get<string>('ACTIVE_LOAN_STATE');
+    const loanStateId = await this.loanStateService.findIdByName(ACTIVE_LOAN_STATE);
     const returnDate = new Date();
-    const limitActiveLoan = this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS');
-    returnDate.setDate(returnDate.getDate() + limitActiveLoan);
-    
+    const limitActiveLoanInDays:number = +this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS');
+    const newDate = returnDate.getDate() + limitActiveLoanInDays;
+    returnDate.setDate(newDate);    
     return await this.loanRepository.save({
       copyBook: {
         id: copyBookId
@@ -36,6 +40,9 @@ export class LoanService {
       person: {
         id: personId
       },
+      loanState:{
+        id: loanStateId
+      },      
       returnDate: returnDate.toJSON()
     });
   }
