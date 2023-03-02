@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe } from '@nestjs/common';
 import { CopyBookService } from './copy-book.service';
 import { CreateCopyBookDto } from './dto/create-copy-book.dto';
 import { UpdateCopyBookDto } from './dto/update-copy-book.dto';
