@@ -21,8 +21,19 @@ export class CopyBookService {
   async create(createCopyBookDto: CreateCopyBookDto) {
     const { bookId } = createCopyBookDto;
     await this.bookService.findOneById(bookId);
+    const availableState = this.configService.get<string>('AVAILABLE_COPY_BOOK_STATE');
+    const copyBookStateId = await this.copyBookStateService.findIdByName(availableState);
+    const number = await this.findCountCopyBooks(bookId) + 1;
     try {
-      return await this.copyBookRepository.save({ book: { id: bookId } });
+      return await this.copyBookRepository.save({
+        book: {
+          id: bookId 
+        },
+        copyBookState:{
+          id: copyBookStateId
+        },
+        number
+      });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in create copyBook: ${exception.message}`);
     }
@@ -36,10 +47,28 @@ export class CopyBookService {
       throw new ForbiddenException(`CopyBook not is available for loan`);
 
   }
-
+  async findCountCopyBooks(bookId: string){
+    return await this.copyBookRepository.countBy({
+      book:{
+        id: bookId
+      }
+    });
+  }
   async findAllByBookId(id: string) {
     await this.bookService.findOneById(id);
-    return await this.copyBookRepository.findBy({ book: { id } });
+    return await this.copyBookRepository.find({
+      where:{
+        book: {
+          id
+        }
+      },
+      order:{
+        number:'ASC'
+      },
+      relations:{
+        copyBookState: true
+      }
+    });
   }
 
   async findAllByBookCode(code: string) {
@@ -54,7 +83,7 @@ export class CopyBookService {
     throw new BadRequestException(`Not exist copyBook with id: ${id}`);
   }
   
-  async loanCopyBook(id: string){
+  async updateToLoanCopyBook(id: string){
     const copyBookStateId = await this.copyBookStateService.findIdByName(this.configService.get<string>('LOAN_COPY_BOOK_STATE'));
     this.update(id, { copyBookStateId });
   }

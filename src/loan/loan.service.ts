@@ -24,9 +24,10 @@ export class LoanService {
     const { copyBookId, personId } = createLoanDto;
     this.personService.isActive(personId);
     this.copyBookService.isAvailable(copyBookId);
-    this.copyBookService.loanCopyBook(copyBookId);
+    this.copyBookService.updateToLoanCopyBook(copyBookId);
     const returnDate = new Date();
-    returnDate.setDate(returnDate.getDate() + this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS'));
+    const limitActiveLoan = this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS');
+    returnDate.setDate(returnDate.getDate() + limitActiveLoan);
     
     return await this.loanRepository.save({
       copyBook: {
