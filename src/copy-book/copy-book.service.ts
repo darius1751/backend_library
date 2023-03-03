@@ -91,23 +91,32 @@ export class CopyBookService {
     throw new BadRequestException(`Not exist copyBook with id: ${id}`);
   }
   
-  async updateToLoanCopyBook(id: string){
+  async updateToLoan(id: string){
     const loanCopyBookState = this.configService.get<string>('LOAN_COPY_BOOK_STATE');
     const copyBookStateId = await this.copyBookStateService.findIdByName(loanCopyBookState);
+    this.update(id, { copyBookStateId });
+  }
+
+  async updateToReservation(id: string){
+    const reservationCopyBookState = this.configService.get<string>('RESERVATION_COPY_BOOK_STATE');
+    const copyBookStateId = await this.copyBookStateService.findIdByName(reservationCopyBookState);
     this.update(id, { copyBookStateId });
   }
 
   async update(id: string, updateCopyBookDto: UpdateCopyBookDto) {
     await this.findOneById(id);
     try {
+      const { copyBookStateId } = updateCopyBookDto;
       return await this.copyBookRepository.update({ id }, {
         copyBookState: {
-          id: updateCopyBookDto.copyBookStateId
+          id: copyBookStateId
         }
       });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in update copyBook: ${exception.message}`);
     }
+
+
 
   }
 }
