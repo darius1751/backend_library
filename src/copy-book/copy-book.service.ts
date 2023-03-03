@@ -90,7 +90,12 @@ export class CopyBookService {
       return copyBook;
     throw new BadRequestException(`Not exist copyBook with id: ${id}`);
   }
-  
+  async updateToAvailable(id: string){
+    const availableCopyBookState = this.configService.get<string>('AVAILABLE_COPY_BOOK_STATE');
+    const copyBookStateId = await this.copyBookStateService.findIdByName(availableCopyBookState);
+    this.update(id, { copyBookStateId });
+  }
+
   async updateToLoan(id: string){
     const loanCopyBookState = this.configService.get<string>('LOAN_COPY_BOOK_STATE');
     const copyBookStateId = await this.copyBookStateService.findIdByName(loanCopyBookState);
