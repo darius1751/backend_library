@@ -26,7 +26,7 @@ export class LoanService {
     const { copyBookId, personId } = createLoanDto;
     this.personService.isActive(personId);
     this.copyBookService.isAvailable(copyBookId);
-    this.copyBookService.updateToLoanCopyBook(copyBookId);
+    this.copyBookService.updateToLoan(copyBookId);
     const ACTIVE_LOAN_STATE = this.configService.get<string>('ACTIVE_LOAN_STATE');
     const loanStateId = await this.loanStateService.findIdByName(ACTIVE_LOAN_STATE);
     const returnDate = new Date();
