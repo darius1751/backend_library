@@ -10,6 +10,6 @@ export class UpdateLoanDto extends PartialType(CreateLoanDto) {
 
     @IsUUID()
     @IsOptional()
-    public readonly loanStateId: string;
+    public readonly loanStateId?: string;
 
 }

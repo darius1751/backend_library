@@ -36,7 +36,7 @@ export class RenewalService {
     newReturnDate.setDate(newReturnDate.getDate() + additionalLimit);
     await this.loanService.update(loanId, {
       returnDate: newReturnDate.toJSON()
-    })
+    });
     return await this.renewalRepository.save({
       newReturnDate: newReturnDate.toJSON(),
       loan: {
