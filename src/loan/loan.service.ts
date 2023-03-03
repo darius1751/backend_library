@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
@@ -108,20 +108,50 @@ export class LoanService {
       return loan;
     throw new BadRequestException(`Not exist loan with id: ${id}`);
   }
+  
+  async notIsDelivered(id: string){
+    const loan = await this.findOneById(id);
+    const COMPLETE_LOAN_STATE = this.configService.get<string>('COMPLETE_LOAN_STATE');
+    const completeLoanStateId = await this.loanStateService.findIdByName(COMPLETE_LOAN_STATE);
+    const DEFEATED_DELIVERED_LOAN_STATE = this.configService.get<string>('DEFEATED_DELIVERED_LOAN_STATE');
+    const defeatedDeliveredStateId = await this.loanStateService.findIdByName(DEFEATED_DELIVERED_LOAN_STATE);
+    const { loanState } = loan;
+    if(loanState.id === completeLoanStateId || loan.id === defeatedDeliveredStateId)
+      throw new ForbiddenException(`Not is valid delivered`);
+  }
+  async updateForDevolution( id: string ){
+    const loan = await this.findOneById(id);
+    const today = new Date().toJSON().slice(0, 10);
+    const { returnDate } = loan;
+    if( today > returnDate){
+      const DEFEATED_DELIVERED_LOAN_STATE = this.configService.get<string>('DEFEATED_DELIVERED_LOAN_STATE');
+      const defeatedDeliveredStateId = await this.loanStateService.findIdByName(DEFEATED_DELIVERED_LOAN_STATE);
+      this.update(id, { 
+        loanStateId: defeatedDeliveredStateId
+      })
+    } else {
+      const COMPLETE_LOAN_STATE = this.configService.get<string>('COMPLETE_LOAN_STATE');
+      const completeLoanStateId = await this.loanStateService.findIdByName(COMPLETE_LOAN_STATE);
+      this.update(id, { 
+        loanStateId: completeLoanStateId
+      })
+    }
+      
+    
+  }
 
   async update(id: string, updateLoanDto: UpdateLoanDto) {
     await this.findOneById(id);
 
     try {
-      const { copyBookId, personId } = updateLoanDto;
+      const { copyBookId, personId, loanStateId } = updateLoanDto;
       return await this.loanRepository.update({ id }, {
         copyBook: {
           id: copyBookId
         },
         person: {
           id: personId
-        },
-        updatedAt: new Date().toJSON()
+        }
       });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in update loan ${exception.message}`)

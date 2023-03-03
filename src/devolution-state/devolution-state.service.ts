@@ -8,30 +8,34 @@ import { DevolutionState } from './entities/devolution-state.entity';
 export class DevolutionStateService {
 
   constructor(
-    @InjectRepository(DevolutionState) private devolutionStateRepository:Repository<DevolutionState>
-  ){}
+    @InjectRepository(DevolutionState) private devolutionStateRepository: Repository<DevolutionState>
+  ) { }
 
   async create(createDevolutionStateDto: CreateDevolutionStateDto) {
-    try{
+    try {
       return await this.devolutionStateRepository.save(createDevolutionStateDto);
-    }catch(exception){
+    } catch (exception) {
       throw new InternalServerErrorException(`Error in create devolutionState, Exception: ${exception}`);
     }
-    
+
   }
 
-  async findOneById( id:string ){
-    const devolutionState = await this.devolutionStateRepository.findOneBy({id});
-    if(devolutionState)
+  async findOneById(id: string) {
+    const devolutionState = await this.devolutionStateRepository.findOneBy({ id });
+    if (devolutionState)
       return devolutionState;
     throw new BadRequestException(`Not exist devolutionState with id: ${id}`);
   }
 
+  async findIdByName(name: string){
+    const devolutionState = await this.devolutionStateRepository.findOneBy({name});
+    if(devolutionState)
+      return devolutionState.id;
+    throw new BadRequestException(`Not exist devolutionState with name: ${name}`);
+  }
+  
   findAll() {
     return this.devolutionStateRepository.find();
   }
 
-  
-
- 
 }
