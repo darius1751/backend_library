@@ -18,7 +18,7 @@ export class LoanService {
     @InjectRepository(Loan) private loanRepository: Repository<Loan>,
     private personService: PersonService,
     private copyBookService: CopyBookService,
-    private loanStateService:LoanStateService,
+    private loanStateService: LoanStateService,
     private configService: ConfigService
   ) { }
 
@@ -30,9 +30,9 @@ export class LoanService {
     const ACTIVE_LOAN_STATE = this.configService.get<string>('ACTIVE_LOAN_STATE');
     const loanStateId = await this.loanStateService.findIdByName(ACTIVE_LOAN_STATE);
     const returnDate = new Date();
-    const limitActiveLoanInDays:number = +this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS');
+    const limitActiveLoanInDays: number = +this.configService.get<number>('LIMIT_ACTIVE_LOAN_IN_DAYS');
     const newDate = returnDate.getDate() + limitActiveLoanInDays;
-    returnDate.setDate(newDate);    
+    returnDate.setDate(newDate);
     return await this.loanRepository.save({
       copyBook: {
         id: copyBookId
@@ -40,15 +40,15 @@ export class LoanService {
       person: {
         id: personId
       },
-      loanState:{
+      loanState: {
         id: loanStateId
-      },      
+      },
       returnDate: returnDate.toJSON()
     });
   }
 
   async findAll(skip: number, take: number) {
-    const [loans, totalRegisters] =  await this.loanRepository.findAndCount({
+    const [loans, totalRegisters] = await this.loanRepository.findAndCount({
       skip,
       take,
       order: {
@@ -60,11 +60,21 @@ export class LoanService {
       pagination: generatePagination(skip, take, totalRegisters)
     }
   }
+  async isActive(id: string) {
+    const activeLoanState = this.configService.get<string>('ACTIVE_LOAN_STATE');
+    const activeLoanStateId = await this.loanStateService.findIdByName(activeLoanState);
+    const loan = await this.findOneById(id);
+    const { loanState } = loan;
+    if (loanState.id !== activeLoanStateId)
+      throw new BadRequestException(`The loan ${id} not is active`);
+
+  }
+
 
   async findAllByPersonId(id: string, skip: number, take: number) {
     await this.personService.findOneById(id);
     try {
-      const [loans, totalRegisters] =  await this.loanRepository.findAndCount({
+      const [loans, totalRegisters] = await this.loanRepository.findAndCount({
         where: {
           person: { id }
         },
@@ -74,7 +84,7 @@ export class LoanService {
         skip,
         take
       });
-      return { 
+      return {
         loans,
         pagination: generatePagination(skip, take, totalRegisters)
       }
@@ -84,7 +94,16 @@ export class LoanService {
   }
 
   async findOneById(id: string) {
-    const loan = this.loanRepository.findOneBy({ id });
+    const loan = this.loanRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        loanState: true,
+        copyBook: true,
+        person: true
+      }
+    });
     if (loan)
       return loan;
     throw new BadRequestException(`Not exist loan with id: ${id}`);
@@ -92,6 +111,7 @@ export class LoanService {
 
   async update(id: string, updateLoanDto: UpdateLoanDto) {
     await this.findOneById(id);
+
     try {
       const { copyBookId, personId } = updateLoanDto;
       return await this.loanRepository.update({ id }, {
@@ -100,7 +120,8 @@ export class LoanService {
         },
         person: {
           id: personId
-        }
+        },
+        updatedAt: new Date().toJSON()
       });
     } catch (exception) {
       throw new InternalServerErrorException(`Error in update loan ${exception.message}`)

@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
 import { RenewalService } from './renewal.service';
 import { CreateRenewalDto } from './dto/create-renewal.dto';
-import { UpdateRenewalDto } from './dto/update-renewal.dto';
 
 @Controller('renewal')
 export class RenewalController {
@@ -23,10 +22,5 @@ export class RenewalController {
   @Get(':id')
   findOneById(@Param('id') id: string) {
     return this.renewalService.findOneById(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRenewalDto: UpdateRenewalDto) {
-    return this.renewalService.update(id, updateRenewalDto);
   }
 }
