@@ -23,8 +23,13 @@ export class DevolutionService {
 
   async create(createDevolutionDto: CreateDevolutionDto) {
     const { loanId, devolutionStateId, annotations } = createDevolutionDto;
+    await this.loanService.notIsDelivered(loanId);
     const loan = await this.loanService.findOneById(loanId);
-    const devolutionState = await this.devolutionStateService.findOneById(devolutionStateId);
+    await this.loanService.updateForDevolution(loanId);
+    // const devolutionState = await this.devolutionStateService.findOneById(devolutionStateId);
+    // Implement logic bussiness for punishment's person 
+    const { copyBook } = loan;
+    await this.copyBookService.updateToAvailable(copyBook.id);
     try {
       return await this.devolutionRepository.save({ 
         annotations, 

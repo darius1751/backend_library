@@ -21,7 +21,7 @@ export class Loan {
 
     @Column({
         name:'return_date',
-        type:'timestamp',
+        type:'date',
         nullable: false
     })
     public readonly returnDate: string;
