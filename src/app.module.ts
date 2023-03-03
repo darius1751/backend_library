@@ -46,6 +46,7 @@ import { RenewalModule } from './renewal/renewal.module';
 import { Renewal } from './renewal/entities/renewal.entity';
 import { SeedModule } from './seed/seed.module';
 import { SeedController } from './seed/seed.controller';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -102,6 +103,7 @@ import { SeedController } from './seed/seed.controller';
     ReservationModule,
     RenewalModule,
     SeedModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
