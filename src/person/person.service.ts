@@ -111,6 +111,7 @@ export class PersonService {
         } 
       },
       relations:{
+        personState:true,
         role:true
       }
     })

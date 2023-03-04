@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile, Header, UseFilters, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile, Header, UseFilters, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesEnum } from 'src/common/enums/roles.enum';
+import { RolesGuard } from 'src/common/rolesGuard/roles.guard';
 import { ExceptionFileFilter } from 'src/exception-file/exception-file.filter';
 import { validateImageFile } from 'src/helpers/validateImageFile';
 import { BookService } from './book.service';
@@ -8,6 +11,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('book')
+@UseGuards(RolesGuard)
 export class BookController {
 
   constructor(private readonly bookService: BookService) { }
@@ -19,6 +23,10 @@ export class BookController {
       filename: validateImageFile
     })
   }))
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   create(
     @UploadedFile() frontPage: Express.Multer.File,
     @Body() createBookDto: CreateBookDto
@@ -32,6 +40,11 @@ export class BookController {
   @Header('content-disposition', 'inline')
   @Header('content-type', 'octet-stream')
   @UseFilters(ExceptionFileFilter)
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findFrontPageByCode(
     @Param('codeWithExtension') codeWithExtension: string
   ) {
@@ -40,16 +53,31 @@ export class BookController {
 
 
   @Get(':id')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findOneById(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookService.findOneById(id);
   }
 
   @Get('code/:code')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findOneByCode(@Param('code') code: string) {
     return this.bookService.findOneByCode(code);
   }
 
   @Get()
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findAll(
     @Query('skip', ParseIntPipe) skip: number,
     @Query('take', ParseIntPipe) take: number,
@@ -58,16 +86,30 @@ export class BookController {
   }
 
   @Get('category/:name')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findAllByCategoryName(@Param('name') name: string) {
     return this.bookService.findAllByCategoryName(name);
   }
 
   @Get('author/:id')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario,
+    RolesEnum.Usuario
+  )
   findAllByAuthorId(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookService.findAllByAuthorId(id);
   }
 
   @Patch(':id')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   update(@Param('id', ParseUUIDPipe) id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(id, updateBookDto);
   }
