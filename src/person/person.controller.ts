@@ -1,16 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { PersonService } from './person.service';
 
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { loginCredentialDto } from 'src/credential/dto/login-credential.dto';
+import { RolesGuard } from 'src/common/rolesGuard/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesEnum } from 'src/common/enums/roles.enum';
 
 @Controller('person')
+@UseGuards(RolesGuard)
 export class PersonController {
 
   constructor(private readonly personService: PersonService) { }
 
   @Post()
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   create(@Body() createPersonDto: CreatePersonDto) {
     return this.personService.create(createPersonDto);
   }

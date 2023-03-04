@@ -50,7 +50,12 @@ export class RoleService {
 
   async findOneById(id: string) {
     
-    const role = await this.roleRepository.findOneBy({id, permissions:true});
+    const role = await this.roleRepository.findOneBy(
+      {
+        id,
+        permissions:true
+      }
+    );
     if(role)
       return role;
     throw new BadRequestException(`Don't exist role with id: ${id}`);
