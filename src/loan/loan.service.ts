@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, InternalServerErro
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { LoanStateService } from 'src/loan-state/loan-state.service';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';

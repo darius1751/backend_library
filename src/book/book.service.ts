@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
 import { AuthorService } from 'src/author/author.service';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';

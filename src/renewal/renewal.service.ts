@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { LoanService } from 'src/loan/loan.service';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';

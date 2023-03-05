@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CopyBookService } from 'src/copy-book/copy-book.service';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { PersonService } from 'src/person/person.service';
 import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';

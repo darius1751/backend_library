@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialService } from 'src/credential/credential.service';
 import { loginCredentialDto } from 'src/credential/dto/login-credential.dto';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { PersonStateService } from 'src/person-state/person-state.service';
 import { Repository } from 'typeorm';
 import { CreatePersonDto } from './dto/create-person.dto';

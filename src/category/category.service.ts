@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Streamab
 import { join } from 'path';
 import { createReadStream, existsSync } from 'fs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { generatePagination } from 'src/helpers/generatePagination';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';

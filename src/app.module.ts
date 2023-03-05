@@ -6,7 +6,7 @@ import { TestingModule } from '@nestjs/testing';
 import { env } from 'process';
 
 import { AppService } from './app.service';
-import { JwtMiddleware } from './jwt/jwt.middleware';
+import { JwtMiddleware } from './common/jwt/jwt.middleware';
 import { AppController } from './app.controller';
 import { PermissionController } from './permission/permission.controller';
 
