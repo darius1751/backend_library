@@ -1,5 +1,6 @@
 export enum RolesEnum {
     Administrador = 'Administrador',
     Bibliotecario = 'Bibliotecario',
-    Usuario = 'Usuario'
+    Usuario = 'Usuario',
+    ALL = 'ALL'
 }
