@@ -41,9 +41,7 @@ export class BookController {
   @Header('content-type', 'octet-stream')
   @UseFilters(ExceptionFileFilter)
   @Roles(
-    RolesEnum.Administrador,
-    RolesEnum.Bibliotecario,
-    RolesEnum.Usuario
+    RolesEnum.ALL
   )
   findFrontPageByCode(
     @Param('codeWithExtension') codeWithExtension: string
@@ -74,9 +72,7 @@ export class BookController {
 
   @Get()
   @Roles(
-    RolesEnum.Administrador,
-    RolesEnum.Bibliotecario,
-    RolesEnum.Usuario
+    RolesEnum.ALL
   )
   findAll(
     @Query('skip', ParseIntPipe) skip: number,
@@ -87,9 +83,7 @@ export class BookController {
 
   @Get('category/:name')
   @Roles(
-    RolesEnum.Administrador,
-    RolesEnum.Bibliotecario,
-    RolesEnum.Usuario
+    RolesEnum.ALL
   )
   findAllByCategoryName(@Param('name') name: string) {
     return this.bookService.findAllByCategoryName(name);
@@ -97,9 +91,7 @@ export class BookController {
 
   @Get('author/:id')
   @Roles(
-    RolesEnum.Administrador,
-    RolesEnum.Bibliotecario,
-    RolesEnum.Usuario
+    RolesEnum.ALL
   )
   findAllByAuthorId(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookService.findAllByAuthorId(id);
