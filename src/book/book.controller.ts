@@ -70,6 +70,15 @@ export class BookController {
     return this.bookService.findOneByCode(code);
   }
 
+  @Get('query/flex')
+  findFlex(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+    @Query('query') query: string
+  ){
+    return this.bookService.findFlex(skip, take, query);
+  }
+
   @Get()
   @Roles(
     RolesEnum.ALL

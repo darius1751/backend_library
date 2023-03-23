@@ -21,6 +21,8 @@ export class RolesGuard implements CanActivate {
   }
   async verifyRole(context: ExecutionContext):Promise<boolean>{
       const roles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler());
+      if(!roles)
+        return true;
       if(roles.includes(RolesEnum.ALL))
         return true;
       const request: Request = context.switchToHttp().getRequest();
