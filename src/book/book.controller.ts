@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query, ParseIntPipe, UseInterceptors, UploadedFile, Header, UseFilters, UseGuards } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
+  ParseUUIDPipe, 
+  Query, 
+  ParseIntPipe, 
+  UseInterceptors, 
+  UploadedFile, 
+  Header, 
+  UseFilters, 
+  UseGuards 
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -68,6 +83,16 @@ export class BookController {
   )
   findOneByCode(@Param('code') code: string) {
     return this.bookService.findOneByCode(code);
+  }
+
+  @Get('query/flex')
+  @Roles(RolesEnum.ALL)
+  findFlex(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+    @Query('query') query: string
+  ){
+    return this.bookService.findFlex(skip, take, query);
   }
 
   @Get()
