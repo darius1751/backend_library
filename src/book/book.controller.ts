@@ -71,6 +71,7 @@ export class BookController {
   }
 
   @Get('query/flex')
+  @Roles(RolesEnum.ALL)
   findFlex(
     @Query('skip', ParseIntPipe) skip: number,
     @Query('take', ParseIntPipe) take: number,
