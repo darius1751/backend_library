@@ -33,9 +33,13 @@ export class BookService {
         },
       });
     } catch (exception) {
-      throw new InternalServerErrorException(
-        `Error in create book: ${exception.message}`,
-      );
+      console.log({exception});
+      const { code } = exception;
+      if(code === 'ER_NO_DEFAULT_FOR_FIELD')
+        throw new BadRequestException(
+          `Error in create book: ${exception.sqlMessage}`,
+        );  
+      
     }
   }
   async findFrontPageByCode(code: string) {
@@ -86,8 +90,8 @@ export class BookService {
       order: {
         title: 'ASC',
       },
-      select: {
-        frontPage: false,
+      select:{
+        frontPage: false
       },
       relations: {
         author: true,
