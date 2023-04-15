@@ -18,9 +18,16 @@ export class Book {
 
     @Column({
         nullable:false,
+        unique:true,
         name:'front_page'
     })
-    public readonly frontPage:string;
+    public frontPage:string;
+
+    @Column({
+        nullable:false,
+        name:'secure_url'
+    })
+    public readonly secureURL:string;
 
     @Column({
         nullable:false

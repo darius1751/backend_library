@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, UseGuards, ParseIntPipe, Query } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -27,8 +27,11 @@ export class AuthorController {
     RolesEnum.Bibliotecario,
     RolesEnum.Usuario
   )
-  findAll() {
-    return this.authorService.findAll();
+  findAll(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+  ) {
+    return this.authorService.findAll(skip, take);
   }
   
   @Roles(

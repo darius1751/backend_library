@@ -12,7 +12,8 @@ import {
   UploadedFile, 
   Header, 
   UseFilters, 
-  UseGuards 
+  UseGuards, 
+  Req
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -24,6 +25,7 @@ import { validateImageFile } from 'src/common/helpers/validateImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Request } from 'express';
 
 @Controller('book')
 @UseGuards(RolesGuard)
@@ -44,14 +46,16 @@ export class BookController {
   )
   create(
     @UploadedFile() frontPage: Express.Multer.File,
-    @Body() createBookDto: CreateBookDto
+    @Body() createBookDto: CreateBookDto,
+    @Req() req: Request
   ) {
     const { originalname } = frontPage;
     createBookDto.frontPage = originalname;
+    createBookDto.secureURL = `${req.protocol}://${req.get('host')}${req.originalUrl}/frontPage/${createBookDto.code}`
     return this.bookService.create(createBookDto);
   }
 
-  @Get('frontPage/:codeWithExtension')
+  @Get('frontPage/:code')
   @Header('content-disposition', 'inline')
   @Header('content-type', 'octet-stream')
   @UseFilters(ExceptionFileFilter)
@@ -59,9 +63,9 @@ export class BookController {
     RolesEnum.ALL
   )
   findFrontPageByCode(
-    @Param('codeWithExtension') codeWithExtension: string
+    @Param('code') code: string
   ) {
-    return this.bookService.findFrontPageByCode(codeWithExtension);
+    return this.bookService.findFrontPageByCode(code);
   }
 
 

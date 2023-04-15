@@ -21,4 +21,8 @@ export class CreateBookDto {
     @IsString()
     @IsOptional()
     public frontPage?: string;
+
+    @IsString()
+    @IsOptional()
+    public secureURL?: string;
 }
