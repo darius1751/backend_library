@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { generatePagination } from 'src/common/helpers/generatePagination';
 import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
@@ -23,8 +24,12 @@ export class AuthorService {
 
   }
 
-  findAll() {
-    return this.authorRepository.find();
+  async findAll(skip: number, take: number) {
+    const [authors, totalRegisters] = await this.authorRepository.findAndCount({skip, take});
+    return {
+      authors,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
 
   async findOneById(id: string) {

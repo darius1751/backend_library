@@ -15,13 +15,6 @@ export class Category {
     })
     public readonly name:string;
 
-    
-    @Column({
-        nullable:true,
-        default:null
-    })
-    public readonly image:string;
-
     @Column({
         nullable:true,
         default:null
