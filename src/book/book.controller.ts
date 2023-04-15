@@ -13,7 +13,8 @@ import {
   Header, 
   UseFilters, 
   UseGuards, 
-  Req
+  Req,
+  Res
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -25,7 +26,9 @@ import { validateImageFile } from 'src/common/helpers/validateImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { extname } from 'path';
+import { getContentTypeImage } from 'src/common/helpers/getContentTypeImage';
 
 @Controller('book')
 @UseGuards(RolesGuard)
@@ -57,15 +60,20 @@ export class BookController {
 
   @Get('frontPage/:code')
   @Header('content-disposition', 'inline')
-  @Header('content-type', 'octet-stream')
   @UseFilters(ExceptionFileFilter)
   @Roles(
     RolesEnum.ALL
   )
-  findFrontPageByCode(
-    @Param('code') code: string
+  async findFrontPageByCode(
+    @Param('code') code: string,
+    @Res({passthrough: true}) res: Response
   ) {
-    return this.bookService.findFrontPageByCode(code);
+    
+    const image:any = await this.bookService.findFrontPageByCode(code);
+    const ext = extname(image.getStream().path)
+    res.set('content-type',getContentTypeImage(ext));
+    return image;
+
   }
 
 
