@@ -9,9 +9,11 @@ import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
 import { AuthorService } from 'src/author/author.service';
 import { Author } from 'src/author/entities/author.entity';
+import { CategoryService } from 'src/category/category.service';
 import { Category } from 'src/category/entities/category.entity';
 import { generatePagination } from 'src/common/helpers/generatePagination';
 import { Repository } from 'typeorm';
+import { AddCategoryDTO } from './dto/add-category-dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
@@ -21,6 +23,7 @@ export class BookService {
   constructor(
     @InjectRepository(Book) private bookRepository: Repository<Book>,
     private authorService: AuthorService,
+    private categoryService: CategoryService
   ) {}
 
   async create(createBookDto: CreateBookDto) {
@@ -132,8 +135,8 @@ export class BookService {
     throw new BadRequestException(`Not exist book with code: ${code}`);
   }
 
-  findAllByCategoryName(name: string) {
-    return this.bookRepository.find({
+  async findAllByCategoryName(skip: number, take: number, name: string) {
+    const [books, totalRegisters] = await this.bookRepository.findAndCount({
       where: { 
         categories: { 
           name 
@@ -143,6 +146,10 @@ export class BookService {
         frontPage: false 
       },
     });
+    return {
+      books,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
 
   async findAllByAuthorId(id: string) {
@@ -157,6 +164,20 @@ export class BookService {
         frontPage: false 
       },
     });
+  }
+  async addCategories(id: string, addCategoriesDto: AddCategoryDTO){
+    await this.findOneById(id);
+    const { categories } = addCategoriesDto;
+    for(const categoryId of categories){
+      await this.categoryService.findOneById(categoryId);
+    }
+    const categoriesId: any[] = categories.map((id)=>({id}));
+    try{
+      return await this.bookRepository.save({id, categories: categoriesId});
+    }catch(exception){
+      console.log({exception});
+      return {ok: false}
+    }
   }
 
   async update(id: string, updateBookDto: UpdateBookDto) {

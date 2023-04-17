@@ -29,6 +29,8 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { Request, Response } from 'express';
 import { extname } from 'path';
 import { getContentTypeImage } from 'src/common/helpers/getContentTypeImage';
+import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
+import { AddCategoryDTO } from './dto/add-category-dto';
 
 @Controller('book')
 @UseGuards(RolesGuard)
@@ -122,8 +124,12 @@ export class BookController {
   @Roles(
     RolesEnum.ALL
   )
-  findAllByCategoryName(@Param('name') name: string) {
-    return this.bookService.findAllByCategoryName(name);
+  findAllByCategoryName(
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
+    @Param('name') name: string
+  ) {
+    return this.bookService.findAllByCategoryName(skip, take, name);
   }
 
   @Get('author/:id')
@@ -141,5 +147,14 @@ export class BookController {
   )
   update(@Param('id', ParseUUIDPipe) id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(id, updateBookDto);
+  }
+
+  @Patch(':id/categories')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
+  addCategories(@Param('id', ParseUUIDPipe) id: string,@Body() addCategoryDto: AddCategoryDTO){
+    this.bookService.addCategories(id, addCategoryDto);
   }
 }
