@@ -6,9 +6,11 @@ export const generatePagination = (skip: number, take: number, totalRegisters: n
     const nextPage = ( take <= missing ) ? take : missing;
     const hasNextPage = nextPage !== 0;
     const hasPreviousPage = previousPage !== 0;
+    const actualPage = Math.floor((skip + 1 + take)/take);
     return {
         previousPage,
         hasPreviousPage,
+        actualPage,
         nextPage,
         hasNextPage,
         missing,
