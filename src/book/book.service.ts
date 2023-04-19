@@ -74,10 +74,11 @@ export class BookService {
         .skip(skip)
         .take(take)
         .getManyAndCount();
-      const booksResponse = books.map((book) => {
-        delete book.frontPage;
-        return { ...book };
-      });
+      const booksResponse: Book[] = [];
+      for(const book of books){
+        booksResponse.push(await this.findOneById(book.id));
+      }
+      
       return {
         books: booksResponse,
         pagination: generatePagination(skip, take, totalRegisters),
@@ -113,6 +114,10 @@ export class BookService {
     const book = await this.bookRepository.findOne({
       where: { 
         id 
+      },
+      relations:{
+        author: true,
+        categories: true
       },
       select: { 
         frontPage: false 
