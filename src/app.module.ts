@@ -47,12 +47,27 @@ import { Renewal } from './renewal/entities/renewal.entity';
 import { SeedModule } from './seed/seed.module';
 import { SeedController } from './seed/seed.controller';
 import { CommonModule } from './common/common.module';
+import { FreeModule } from './free/free.module';
+import { AuthorController } from './author/author.controller';
+import { BookController } from './book/book.controller';
+import { CategoryController } from './category/category.controller';
+import { CopyBookController } from './copy-book/copy-book.controller';
+import { CopyBookStateController } from './copy-book-state/copy-book-state.controller';
+import { DevolutionController } from './devolution/devolution.controller';
+import { DevolutionStateController } from './devolution-state/devolution-state.controller';
+import { LoanController } from './loan/loan.controller';
+import { PersonController } from './person/person.controller';
+import { PersonStateController } from './person-state/person-state.controller';
+import { RenewalController } from './renewal/renewal.controller';
+import { ReservationController } from './reservation/reservation.controller';
+import { ReservationStateController } from './reservation-state/reservation-state.controller';
+import { RoleController } from './role/role.controller';
 
 @Module({
   imports: [
     CredentialModule,
     TestingModule,
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.register({
       secret: env.SECRET,
       signOptions: { expiresIn: '10h' }
@@ -104,14 +119,34 @@ import { CommonModule } from './common/common.module';
     RenewalModule,
     SeedModule,
     CommonModule,
+    FreeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule{ 
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(JwtMiddleware)
-    .forRoutes(AppController,PermissionController, SeedController)
+      .apply(JwtMiddleware)
+      .forRoutes(
+        AppController, 
+        AuthorController, 
+        BookController, 
+        CategoryController, 
+        CopyBookController, 
+        PermissionController, 
+        CopyBookStateController,
+        DevolutionController,
+        DevolutionStateController,
+        LoanController,
+        PermissionController,
+        PersonController,
+        PersonStateController,
+        RenewalController,
+        ReservationController,
+        ReservationStateController,
+        RoleController,
+        SeedController
+        )
   }
 }
