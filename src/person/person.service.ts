@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialService } from 'src/credential/credential.service';
@@ -9,20 +9,23 @@ import { Repository } from 'typeorm';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { Person } from './entities/person.entity';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class PersonService {
 
   constructor(
     @InjectRepository(Person) private personRepository: Repository<Person>,
-    private credentialService: CredentialService,
+    @Inject(forwardRef(() => CredentialService)) private credentialService: CredentialService,
     private personStateService: PersonStateService,
+    private roleService: RoleService,
     private configService: ConfigService
   ) { }
 
   async create(createPersonDto: CreatePersonDto) {
 
     const { credential, roleId, ...createPerson } = createPersonDto;
+    await this.roleService.findOneById(roleId);
     const credentialId = await this.credentialService.create(credential);
     const personStateId = await this.personStateService.findIdByName(this.configService.get<string>('ACCEPTABLE_PERSON_STATE'));
     try {
@@ -48,7 +51,7 @@ export class PersonService {
     const person = await this.findOneByCredentialId(id);
     return { token, person }
   }
-
+  
   async isActive(personId: string){
     const person = await this.findOneById(personId);
     const { personState } = person;
@@ -102,7 +105,7 @@ export class PersonService {
       throw new InternalServerErrorException(`Error in update person with id: ${id}`);
     }
   }
-  private async findOneByCredentialId(id: string) {
+  async findOneByCredentialId(id: string) {
 
     const person = await this.personRepository.findOne({
       where: { 

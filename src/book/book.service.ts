@@ -24,7 +24,7 @@ export class BookService {
     @InjectRepository(Book) private bookRepository: Repository<Book>,
     private authorService: AuthorService,
     private categoryService: CategoryService
-  ) {}
+  ) { }
 
   async create(createBookDto: CreateBookDto) {
     const { authorId, ...createBook } = createBookDto;
@@ -36,13 +36,13 @@ export class BookService {
         },
       });
     } catch (exception) {
-      console.log({exception});
+      console.log({ exception });
       const { code } = exception;
-      if(code === 'ER_NO_DEFAULT_FOR_FIELD')
+      if (code === 'ER_NO_DEFAULT_FOR_FIELD')
         throw new BadRequestException(
           `Error in create book: ${exception.sqlMessage}`,
-        );  
-      
+        );
+
     }
   }
   async findFrontPageByCode(code: string) {
@@ -50,11 +50,14 @@ export class BookService {
       const { frontPage } = await this.findOneByCode(code);
       const path = join(__dirname, '..', '..', 'images', 'books', frontPage);
       if (existsSync(path)) {
+
         const file = createReadStream(path);
         return new StreamableFile(file);
       }
-      throw new BadRequestException(join('books', 'error.png'));
-    } catch (exception) {}
+      throw new BadRequestException('books');
+    } catch (exception) {
+      throw new BadRequestException('books');
+    }
   }
   async findFlex(skip: number, take: number, query: string) {
     try {
@@ -75,10 +78,10 @@ export class BookService {
         .take(take)
         .getManyAndCount();
       const booksResponse: Book[] = [];
-      for(const book of books){
+      for (const book of books) {
         booksResponse.push(await this.findOneById(book.id));
       }
-      
+
       return {
         books: booksResponse,
         pagination: generatePagination(skip, take, totalRegisters),
@@ -94,7 +97,7 @@ export class BookService {
       order: {
         title: 'ASC',
       },
-      select:{
+      select: {
         frontPage: false
       },
       relations: {
@@ -112,15 +115,15 @@ export class BookService {
 
   async findOneById(id: string) {
     const book = await this.bookRepository.findOne({
-      where: { 
-        id 
+      where: {
+        id
       },
-      relations:{
+      relations: {
         author: true,
         categories: true
       },
-      select: { 
-        frontPage: false 
+      select: {
+        frontPage: false
       },
     });
     if (book) return book;
@@ -129,11 +132,11 @@ export class BookService {
 
   async findOneByCode(code: string) {
     const book = await this.bookRepository.findOne({
-      where: { 
-        code 
+      where: {
+        code
       },
-      select: { 
-        frontPage: false 
+      select: {
+        frontPage: false
       },
     });
     if (book) return book;
@@ -142,13 +145,13 @@ export class BookService {
 
   async findAllByCategoryName(skip: number, take: number, name: string) {
     const [books, totalRegisters] = await this.bookRepository.findAndCount({
-      where: { 
-        categories: { 
-          name 
-        } 
+      where: {
+        categories: {
+          name
+        }
       },
-      select: { 
-        frontPage: false 
+      select: {
+        frontPage: false
       },
     });
     return {
@@ -157,31 +160,35 @@ export class BookService {
     }
   }
 
-  async findAllByAuthorId(id: string) {
+  async findAllByAuthorId(skip: number, take: number, id: string) {
     await this.authorService.findOneById(id);
-    return await this.bookRepository.find({
-      where: { 
-        author: { 
-          id 
-        } 
+    const [books, totalRegisters] = await this.bookRepository.findAndCount({
+      where: {
+        author: {
+          id
+        }
       },
-      select: { 
-        frontPage: false 
+      select: {
+        frontPage: false
       },
     });
+    return {
+      books,
+      pagination: generatePagination(skip, take, totalRegisters)
+    }
   }
-  async addCategories(id: string, addCategoriesDto: AddCategoryDTO){
+  async addCategories(id: string, addCategoriesDto: AddCategoryDTO) {
     await this.findOneById(id);
     const { categories } = addCategoriesDto;
-    for(const categoryId of categories){
+    for (const categoryId of categories) {
       await this.categoryService.findOneById(categoryId);
     }
-    const categoriesId: any[] = categories.map((id)=>({id}));
-    try{
-      return await this.bookRepository.save({id, categories: categoriesId});
-    }catch(exception){
-      console.log({exception});
-      return {ok: false}
+    const categoriesId: any[] = categories.map((id) => ({ id }));
+    try {
+      return await this.bookRepository.save({ id, categories: categoriesId });
+    } catch (exception) {
+      console.log({ exception });
+      return { ok: false }
     }
   }
 

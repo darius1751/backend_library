@@ -60,25 +60,6 @@ export class BookController {
     return this.bookService.create(createBookDto);
   }
 
-  @Get('frontPage/:code')
-  @Header('content-disposition', 'inline')
-  @UseFilters(ExceptionFileFilter)
-  @Roles(
-    RolesEnum.ALL
-  )
-  async findFrontPageByCode(
-    @Param('code') code: string,
-    @Res({passthrough: true}) res: Response
-  ) {
-    
-    const image:any = await this.bookService.findFrontPageByCode(code);
-    const ext = extname(image.getStream().path)
-    res.set('content-type',getContentTypeImage(ext));
-    return image;
-
-  }
-
-
   @Get(':id')
   @Roles(
     RolesEnum.Administrador,
@@ -87,57 +68,6 @@ export class BookController {
   )
   findOneById(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookService.findOneById(id);
-  }
-
-  @Get('code/:code')
-  @Roles(
-    RolesEnum.Administrador,
-    RolesEnum.Bibliotecario,
-    RolesEnum.Usuario
-  )
-  findOneByCode(@Param('code') code: string) {
-    return this.bookService.findOneByCode(code);
-  }
-
-  @Get('query/flex')
-  @Roles(RolesEnum.ALL)
-  findFlex(
-    @Query('skip', ParseIntPipe) skip: number,
-    @Query('take', ParseIntPipe) take: number,
-    @Query('query') query: string
-  ){
-    return this.bookService.findFlex(skip, take, query);
-  }
-
-  @Get()
-  @Roles(
-    RolesEnum.ALL
-  )
-  findAll(
-    @Query('skip', ParseIntPipe) skip: number,
-    @Query('take', ParseIntPipe) take: number,
-  ) {
-    return this.bookService.findAll(skip, take);
-  }
-
-  @Get('category/:name')
-  @Roles(
-    RolesEnum.ALL
-  )
-  findAllByCategoryName(
-    @Query('skip', ParseIntPipe) skip: number,
-    @Query('take', ParseIntPipe) take: number,
-    @Param('name') name: string
-  ) {
-    return this.bookService.findAllByCategoryName(skip, take, name);
-  }
-
-  @Get('author/:id')
-  @Roles(
-    RolesEnum.ALL
-  )
-  findAllByAuthorId(@Param('id', ParseUUIDPipe) id: string) {
-    return this.bookService.findAllByAuthorId(id);
   }
 
   @Patch(':id')

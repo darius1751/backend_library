@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCredentialDto } from './dto/create-credential.dto';
@@ -7,14 +7,15 @@ import { Credential } from './entities/credential.entity';
 import { compareSync, hashSync } from 'bcrypt';
 import { loginCredentialDto } from './dto/login-credential.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { PersonService } from 'src/person/person.service';
 
 @Injectable()
 export class CredentialService {
 
   constructor(
-    @InjectRepository(Credential)
-    private credentialRepository: Repository<Credential>,
-    private authService: AuthService
+    @InjectRepository(Credential) private credentialRepository: Repository<Credential>,
+    private authService: AuthService, 
+    private personService: PersonService
   ) { }
 
   async findOneById(id: string) {
@@ -46,7 +47,8 @@ export class CredentialService {
       const userDB = await this.credentialRepository.findOneBy({ user });
       if (compareSync(password, userDB?.password)) {
         const { id } = userDB;
-        const token = this.authService.generateToken(id);
+        const { role } = await this.personService.findOneByCredentialId(id);
+        const token = this.authService.generateToken(role.id);
         return { id, token };
       }
       throw new BadRequestException(`Error in login user: ${user}`);

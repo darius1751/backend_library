@@ -1,9 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { PersonService } from './person.service';
-
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { loginCredentialDto } from 'src/credential/dto/login-credential.dto';
 import { RolesGuard } from 'src/common/rolesGuard/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesEnum } from 'src/common/enums/roles.enum';
@@ -23,12 +21,11 @@ export class PersonController {
     return this.personService.create(createPersonDto);
   }
 
-  @Post('login')
-  login(@Body() loginCredentialDto: loginCredentialDto) {
-    return this.personService.login(loginCredentialDto);
-  }
-
   @Get()
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   findAll(
     @Query('skip', ParseIntPipe) skip: number,
     @Query('take', ParseIntPipe) take: number
@@ -37,16 +34,28 @@ export class PersonController {
   }
 
   @Get(':id')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   findOneById(@Param('id') id: string) {
     return this.personService.findOneById(id);
   }
 
   @Get('identifier/:documentIdentifier')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   findOneByDocumentIdentifier(@Param('documentIdentifier') documentIdentifier: string) {
     return this.personService.findOneByDocumentIdentifier(documentIdentifier);
   }
 
   @Patch(':id')
+  @Roles(
+    RolesEnum.Administrador,
+    RolesEnum.Bibliotecario
+  )
   update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
     return this.personService.update(id, updatePersonDto);
   }

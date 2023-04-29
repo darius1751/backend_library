@@ -9,11 +9,11 @@ export class JwtMiddleware implements NestMiddleware {
 
   use(req: Request, res: any, next: () => void) {
     try{
-      const token = req.get('Authorization');
+      const token = req.get('token');
       this.authService.validateToken(token);
       next();
     }catch(exception){
-      throw new UnauthorizedException(`Error Authorization, jwt not valid`);      
+      throw new UnauthorizedException(`Error, authorization denied`);
     }
     
   }

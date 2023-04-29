@@ -8,8 +8,8 @@ export class AuthService {
     constructor(private jwtService: JwtService) {}
     
     
-    generateToken(id: string): string {
-        return this.jwtService.sign({ id }, { secret: env.SECRET });
+    generateToken(roleId: string): string {
+        return this.jwtService.sign({ id: roleId }, { secret: env.SECRET });
     }
 
     validateToken(token: string):Boolean {

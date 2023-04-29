@@ -6,9 +6,9 @@ export class AuthController{
     
     constructor(private authService:AuthService){}
 
-    @Post()
-    public generate(/*@Param('id', ParseUUIDPipe)*/ id: string){
-        const token = this.authService.generateToken(id);
+    @Post('/:roleId')
+    public generate(@Param('roleId', ParseUUIDPipe) roleId: string){
+        const token = this.authService.generateToken(roleId);
         return {token};
     }
 }
