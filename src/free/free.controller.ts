@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query, ParseIntPipe, Res, UseFilters, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body,  Param,  ParseUUIDPipe, Query, ParseIntPipe, Res, UseFilters, Header } from '@nestjs/common';
 import { Response } from 'express';
 import { extname } from 'path';
 import { ExceptionFileFilter } from 'src/common/exception-file/exception-file.filter';
@@ -19,7 +19,7 @@ export class FreeController {
     return this.freeService.findAllBooks(skip, take);
   }
 
-  @Get('frontPage/:code')
+  @Get('/book/frontPage/:code')
   @Header('content-disposition', 'inline')
   @UseFilters(ExceptionFileFilter)
   async findFrontPageByCode(

@@ -41,6 +41,7 @@ export class PersonService {
         }
       });
     } catch (exception) {
+      this.credentialService.delete(credentialId);
       throw new InternalServerErrorException(`Error in create person, Exception : ${exception.message}`);
     }
   }

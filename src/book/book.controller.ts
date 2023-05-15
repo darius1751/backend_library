@@ -6,30 +6,21 @@ import {
   Patch, 
   Param, 
   ParseUUIDPipe, 
-  Query, 
-  ParseIntPipe, 
   UseInterceptors, 
   UploadedFile, 
-  Header, 
-  UseFilters, 
   UseGuards, 
   Req,
-  Res
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesEnum } from 'src/common/enums/roles.enum';
 import { RolesGuard } from 'src/common/rolesGuard/roles.guard';
-import { ExceptionFileFilter } from 'src/common/exception-file/exception-file.filter';
 import { validateImageFile } from 'src/common/helpers/validateImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { Request, Response } from 'express';
-import { extname } from 'path';
-import { getContentTypeImage } from 'src/common/helpers/getContentTypeImage';
-import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
+import { Request } from 'express';
 import { AddCategoryDTO } from './dto/add-category-dto';
 
 @Controller('book')
@@ -56,7 +47,8 @@ export class BookController {
   ) {
     const { originalname } = frontPage;
     createBookDto.frontPage = originalname;
-    createBookDto.secureURL = `${req.protocol}://${req.get('host')}${req.originalUrl}/frontPage/${createBookDto.code}`
+    const url = req.originalUrl.replace('/book','/free')+'/book';
+    createBookDto.secureURL = `${req.protocol}://${req.get('host')}${url}/frontPage/${createBookDto.code}`
     return this.bookService.create(createBookDto);
   }
 

@@ -24,12 +24,8 @@ export class AuthorService {
 
   }
 
-  async findAll(skip: number, take: number) {
-    const [authors, totalRegisters] = await this.authorRepository.findAndCount({skip, take});
-    return {
-      authors,
-      pagination: generatePagination(skip, take, totalRegisters)
-    }
+  async findAll() {
+    return await this.authorRepository.find();    
   }
 
   async findOneById(id: string) {

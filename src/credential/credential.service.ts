@@ -14,19 +14,19 @@ export class CredentialService {
 
   constructor(
     @InjectRepository(Credential) private credentialRepository: Repository<Credential>,
-    private authService: AuthService, 
+    private authService: AuthService,
     private personService: PersonService
   ) { }
 
   async findOneById(id: string) {
-    
-      const credential = await this.credentialRepository.findOneBy({ id });
-      if(credential){
-        const { id, user } = credential;
-        return { id, user };
-      }
-      throw new BadRequestException(`Not exist credential with id: ${id}`);
-    
+
+    const credential = await this.credentialRepository.findOneBy({ id });
+    if (credential) {
+      const { id, user } = credential;
+      return { id, user };
+    }
+    throw new BadRequestException(`Not exist credential with id: ${id}`);
+
   }
 
   async create(createCredentialDto: CreateCredentialDto) {
@@ -41,19 +41,34 @@ export class CredentialService {
       throw new BadRequestException(`Error in create user: ${exception.message}`);
     }
   }
+  private async findOneByUser(user: string) {
+    const credential = await this.credentialRepository.findOneBy({ user });
+    if (credential)
+      return credential;
+    throw new BadRequestException(`Error in credentials`);
+  }
 
   async login(loginCredentialDto: loginCredentialDto) {
-      const { user, password } = loginCredentialDto;
-      const userDB = await this.credentialRepository.findOneBy({ user });
+    const { user, password } = loginCredentialDto;
+    const userDB = await this.findOneByUser(user);
+    if (userDB.password) {
       if (compareSync(password, userDB?.password)) {
         const { id } = userDB;
         const { role } = await this.personService.findOneByCredentialId(id);
         const token = this.authService.generateToken(role.id);
         return { id, token };
       }
-      throw new BadRequestException(`Error in login user: ${user}`);
     }
-  
+
+    throw new BadRequestException(`Error in login user: ${user}`);
+  }
+  async delete(id: string){
+    try{
+      return await this.credentialRepository.delete({id});
+    }catch(exception){
+      throw new BadRequestException(`Don't exist credential with id: ${id}`);
+    }
+  }
   async update(id: string, updateCredentialDto: UpdateCredentialDto) {
     try {
       await this.findOneById(id);
